@@ -1,19 +1,19 @@
 CREATE TABLE Customer(
-	CustomerID int primary key,
+	CustomerID int identity(1, 1) primary key,
 	First_Name varchar(40) not null,
 	Last_Name varchar(40) not null
 );
 
 CREATE TABLE Author_of_the_books(
-	AuthorID int primary key,
+	AuthorID int identity(1, 1) primary key,
 	First_Name varchar(40) not null,
 	Last_Name varchar(40) not null,
-	Gender bit,
+	Gender varchar(20),
 	Date_of_Birth date
 );
 
 CREATE TABLE Orders(
-	OrderID int primary key,
+	OrderID int identity(1, 1) primary key,
 	Order_Date date not null,
 	Order_Value decimal(9,2)
 );
@@ -27,22 +27,22 @@ CREATE TABLE Books(
 );
 
 CREATE TABLE Order_Items(
-	Item_Number int primary key,
+	Item_Number int identity(1, 1) primary key,
 	Item_Price decimal(9,2) not null,
 );
 
 CREATE TABLE Supplier(
-	SupplierID int primary key,
+	SupplierID int identity(1, 1) primary key,
 	Supplier_Name varchar(40) not null
 );
 
 CREATE TABLE Book_Categories(
-	Category_Code int primary key,
+	Category_Code int identity(1, 1) primary key,
 	Category_Desc varchar(100) not null
 );
 
 CREATE TABLE Contact_Details(
-	ContactID int primary key,
+	ContactID int identity(1, 1) primary key,
 );
 
 CREATE TABLE Supplier_Rep(
