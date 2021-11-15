@@ -19,7 +19,7 @@ CREATE TABLE Orders(
 );
 
 CREATE TABLE Books(
-	ISBN int primary key,
+	ISBN bigint primary key,
 	Title varchar(100) not null,
 	Publication_Date date not null,
 	Price decimal(9,2) not null,
@@ -48,8 +48,8 @@ CREATE TABLE Contact_Details(
 CREATE TABLE Supplier_Rep(
 	First_Name varchar(40) not null,
 	Last_Name varchar(40) not null,
-	Work_Number int,
-	Cell_Number int,
+	Work_Number bigint,
+	Cell_Number bigint,
 	Email varchar(40),
 	primary key(First_Name, Last_Name)
 );
