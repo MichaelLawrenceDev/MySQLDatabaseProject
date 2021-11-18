@@ -1,0 +1,146 @@
+from tkinter import *
+import tkinter.messagebox as MessageBox
+import mysql.connector as mysql
+
+def create():
+    Name = y_Name.get()
+    LName = y_LName.get()
+    Contact = y_Contact()
+    CAdd = y_CAdd()
+    CNum = y_CNum.get()
+    CMail = y_CMail.get()
+
+    if(Name=="" or LName=="" or Contact=="" or CAdd=="" or CNum=="" or CMail==""):
+        MessageBox.showinfo('Create Status', 'All fields are required')
+    else:
+        conn = mysql.connect(host="localhost", user="root", password="", database="Bookstore DB")
+        cursor = conn.cursor()
+        cursor.execute('insert into Customer values ('" + Name +"', '" + LName +"', '" + Contact +"', '" + CAdd +"', '" + CNum +"', '" + CMail +"')')
+        cursor.execute('commit')
+
+        y_Name.delete(0, 'end')
+        y_LName.delete(0, 'end')
+        y_Contact.delete(0, 'end')
+        y_CAdd.delete(0, 'end')
+        y_CNum.delete(0, 'end')
+        y_CMail.delete(0, 'end')
+        MessageBox.showinfo('Create Status', 'Customer created!')
+        conn.close()
+
+def delete():
+    if (y_LName.get() == "" and y_CMail.get() == ""):
+        MessageBox.showinfo('Delete Status', 'Your email and last name are compulsory for delete')
+    else:
+        conn = mysql.connect(host="localhost", user="root", password="", database="Bookstore DB")
+        cursor = conn.cursor()
+        cursor.execute("delete from Customer where LName =='" + y_LName.get() +" and CMail =='" + y_CMail.get() +"'")
+        cursor.execute('commit')
+
+        y_Name.delete(0, 'end')
+        y_LName.delete(0, 'end')
+        y_Contact.delete(0, 'end')
+        y_CAdd.delete(0, 'end')
+        y_CNum.delete(0, 'end')
+        y_CMail.delete(0, 'end')
+        MessageBox.showinfo('Delete Status', 'Record deleted!')
+        conn.close()
+
+def update():
+    Name = y_Name.get()
+    LName = y_LName.get()
+    Contact = y_Contact()
+    CAdd = y_CAdd()
+    CNum = y_CNum.get()
+    CMail = y_CMail.get()
+    id = input ('Please provide your unique id')
+
+    if(Name=="" or LName=="" or Contact=="" or CAdd=="" or CNum=="" or CMail==""):
+        MessageBox.showinfo('Update Status', 'All fields are required')
+    else:
+        conn = mysql.connect(host="localhost", user="root", password="", database="Bookstore DB")
+        cursor = conn.cursor()
+        cursor.execute("update Customer set Name='" + Name +"', LName='" + LName +"', Contact='" + Contact +"',CAdd='" + CAdd +"', CNum='" + CNum +"', CMail='" + CMail +"' where id='"+ id +"'")
+        cursor.execute('commit')
+
+        y_Name.delete(0, 'end')
+        y_LName.delete(0, 'end')
+        y_Contact.delete(0, 'end')
+        y_CAdd.delete(0, 'end')
+        y_CNum.delete(0, 'end')
+        y_CMail.delete(0, 'end')
+        MessageBox.showinfo('Update Status', 'Record updated!')
+        conn.close()
+
+def get():
+    if (y_LName.get() == "" and y_CMail.get() == ""):
+        MessageBox.showinfo('Retrieve Status', 'Your email and last name are compulsory for record retrieval')
+    else:
+        conn = mysql.connect(host="localhost", user="root", password="", database="Bookstore DB")
+        cursor = conn.cursor()
+        cursor.execute("select * from Customer where LName =='" + y_LName.get() +" and CMail =='" + y_CMail.get() +"'")
+        rows = cursor.retrieveall()
+
+        for row in rows:
+            y_Name.insert(0, row[1])
+            y_LName.insert(0, row[2])
+            y_Contact.insert(0, row[3])
+            y_CAdd.insert(0, row[4])
+            y_CNum.insert(0, row[5])
+            y_CMail.insert(0, row[6])
+            
+
+        
+        MessageBox.showinfo('Retrieve Status', 'Record deleted!')
+        conn.close()
+    
+root = Tk()
+root.geometry('600x300')
+root.title('Bookstore Database')
+
+Name = Label(root, text='First Name', font =('bold', 10))
+Name.place(x=20, y=30)
+
+LName = Label(root, text='Last Name', font =('bold', 10))
+LName.place(x=20, y=60)
+
+Contact = Label(root, text='ContactID', font =('bold', 10))
+Contact.place(x=20, y=90)
+
+CAdd = Label(root, text='Address', font =('bold', 10))
+CAdd.place(x=20, y=120)
+
+CNum = Label(root, text='Phone number', font =('bold', 10))
+CNum.place(x=20, y=150)
+
+CMail = Label(root, text='Email', font =('bold', 10))
+CMail.place(x=20, y=180);
+
+y_Name= Entry()
+y_Name.place(x=150, y=30)
+
+y_LName= Entry()
+y_LName.place(x=150, y=60)
+
+y_Contact= Entry()
+y_Contact.place(x=150, y=90)
+
+y_CAdd= Entry()
+y_CAdd.place(x=150, y=120)
+
+y_CNum= Entry()
+y_CNum.place(x=150, y=150)
+
+y_CMail= Entry()
+y_CMail.place(x=150, y=180)
+
+create = Button(root, text='Create', font =('italic', 10), bg='white', command=create)
+create.place(x=50, y=210)
+
+delete = Button(root, text='Delete', font =('italic', 10), bg='white', command=delete)
+delete.place(x=120, y=210)
+
+update = Button(root, text='Update', font =('italic', 10), bg='white', command=update)
+update.place(x=190, y=210)
+
+get = Button(root, text='Get', font =('italic', 10), bg='white', command=get)
+get.place(x=260, y=210)
