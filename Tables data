@@ -1,0 +1,62 @@
+insert into Customer
+values (3, 'Jimmy', 'James', 12), (2, 'Hannah', 'Moore', 14), (7, 'Janet', 'Baker', 13), (4, 'Mickey', 'Smith', 19),
+(1, 'Nicole', 'Meek', 17);
+
+insert into Author_of_the_books
+values (1,'Holly', 'Bear', 'Female',cast('1982-01-13' as datetime),12), (2, 'May', 'Jan', 'Female',cast('1970-08-01' as datetime), 14), 
+(3, 'Hynes', 'Haddison','Male', cast('1990-12-22' as datetime), 13), (4, 'Erick', 'Maine', 'Male', cast('1989-01-13' as datetime), 19),
+(5, 'Robin', 'Jackson','Female', cast('1992-02-18' as datetime), 17);
+
+insert into Orders
+values (73982, cast('2021-06-13' as datetime), 200.75), (83249, cast('2021-03-01' as datetime),75.00), 
+(25384, cast('2020-10-26' as datetime), 23.75), (29474, cast('2019-12-17' as datetime), 13.97), 
+(38462, cast('2021-05-30' as datetime), 130.40);
+
+insert into Books
+values (4238729472947, 'Alice and the Wonderland', cast('1865-11-26' as datetime), 33.99, 'love this book 10/10'), 
+(2746294758264, 'World War I', cast('1914-07-28' as datetime), 19.17, 'so informational'), 
+(2846592746591, 'The story of Anne Frank', cast('1929-12-06' as datetime), 19.99, 'so sad'), 
+(1904291740637, 'Gypsy Rose', cast('1991-07-27' as datetime), 23.00, 'free Gypsy'), 
+(2846194650378, 'Im O. J.', cast('1947-09-07' as datetime), 10.35,'who think he did it?');
+
+insert into Order_Items
+values (276, 3.8), (976, 28.40), (658, 7.77), 
+(769, 10.99), (105, 23.75);
+
+insert into Supplier
+values (123, 'Lion Publications'), (234, 'Books and Books'), (345, 'Bee Inc'),
+(456, 'Books and More');
+
+insert into Book_Categories
+values (101, 'Fiction'), (102, 'History'), (103, 'Nonfiction'), 
+(104, 'True Crime');
+
+insert into Contact_Details
+values (12), (14), (13), (19), (17);
+
+insert into Supplier_Rep
+values ('Bryan', 'Maker', 9038276351, null, 'bmaker@lionp.com'), 
+('Micheal', 'Minis', 8764562490, null, 'mikeM@gmail.com'), 
+('Abby', 'Uni', 2947582740, 2756294756, 'abbyuni5@yahoo.com'), 
+('Ray', 'Hall', 9362549017, 2017462849, 'rayhall90@yahoo.com');
+
+insert into CMail
+values ('7Meeeekie@gmail.com', 17), ('hannahMoo43@hotmail.com', 14), 
+('JimmyJim98@gmail.com', 12), ('mickeymousesss1957@gmail.com', 19), 
+('janBanker98@yahoo.com', 13);
+
+insert into CAddress
+values ('122 Mary St, Longville TX 75376', 17), ('650 MLK Lane, Georgia, TX 25879', 14), 
+('953 North St, Nacogdoches, TX 75695', 12), ('7438 Nike Ave, Low, New York 98264', 19), 
+('468 University Dr, Vallyview, California 92837', 13);
+
+insert into CNumber
+values (9873456546, 17), (1234325719, 14), (9874520158, 12), (9368175283, 19), (6521092746, 13);
+
+insert into Assigned_to
+values (4238729472947, 101), (2746294758264, 102), (2846592746591, 103), 
+(1904291740637, 104), (2846194650378, 104);
+
+insert into Written_by
+values (4238729472947, 1), (2746294758264, 2), (2846592746591, 3), 
+(1904291740637, 4), (2846194650378, 5);
