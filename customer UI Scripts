@@ -3,93 +3,78 @@ import tkinter.messagebox as MessageBox
 import mysql.connector as mysql
 
 def create():
-    Name = y_Name.get()
-    LName = y_LName.get()
-    Contact = y_Contact()
-    CAdd = y_CAdd()
-    CNum = y_CNum.get()
-    CMail = y_CMail.get()
-
-    if(Name=="" or LName=="" or Contact=="" or CAdd=="" or CNum=="" or CMail==""):
+    First_Name = y_First_Name.get()
+    Last_Name = y_Last_Name.get()
+    ContactID = y_ContactID()
+    CustomerID = y_CustomerID()
+   
+    if(CustomerID=="" or First_Name=="" or Last_Name=="" or ContactID=="" ):
         MessageBox.showinfo('Create Status', 'All fields are required')
     else:
-        conn = mysql.connect(host="localhost", user="root", password="", database="Bookstore DB")
+        conn = mysql.connect(host='127.0.0.1', port=3306, user="root", password="", database="Bookstore DB")
         cursor = conn.cursor()
-        cursor.execute('insert into Customer values ('" + Name +"', '" + LName +"', '" + Contact +"', '" + CAdd +"', '" + CNum +"', '" + CMail +"')')
+        cursor.execute('insert into Customer values ( '" + CustomerID +"', '" + First_Name +"', '" + Last_Name +"', '" + ContactID +"')')
         cursor.execute('commit')
 
-        y_Name.delete(0, 'end')
-        y_LName.delete(0, 'end')
-        y_Contact.delete(0, 'end')
-        y_CAdd.delete(0, 'end')
-        y_CNum.delete(0, 'end')
-        y_CMail.delete(0, 'end')
+        y_First_Name.delete(0, 'end')
+        y_Last_Name.delete(0, 'end')
+        y_ContactID.delete(0, 'end')
+        y_CustomerID.delete(0, 'end')
         MessageBox.showinfo('Create Status', 'Customer created!')
         conn.close()
 
 def delete():
-    if (y_LName.get() == "" and y_CMail.get() == ""):
-        MessageBox.showinfo('Delete Status', 'Your email and last name are compulsory for delete')
+    if (y_Last_Name.get() == "" and y_CustomerID.get() == ""):
+        MessageBox.showinfo('Delete Status', 'Your ID and last name are compulsory for delete')
     else:
-        conn = mysql.connect(host="localhost", user="root", password="", database="Bookstore DB")
+        conn = mysql.connect(host='127.0.0.1', port=3306, user="root", password="", database="Bookstore DB")
         cursor = conn.cursor()
-        cursor.execute("delete from Customer where LName =='" + y_LName.get() +" and CMail =='" + y_CMail.get() +"'")
+        cursor.execute("delete from Customer where Last_Name =='" + y_Last_Name.get() +" and CustomerID =='" + y_CustomerID.get() +"'")
         cursor.execute('commit')
 
-        y_Name.delete(0, 'end')
-        y_LName.delete(0, 'end')
-        y_Contact.delete(0, 'end')
-        y_CAdd.delete(0, 'end')
-        y_CNum.delete(0, 'end')
-        y_CMail.delete(0, 'end')
+        y_First_Name.delete(0, 'end')
+        y_Last_Name.delete(0, 'end')
+        y_ContactID.delete(0, 'end')
+        y_CustomerID.delete(0, 'end')
         MessageBox.showinfo('Delete Status', 'Record deleted!')
         conn.close()
 
 def update():
-    Name = y_Name.get()
-    LName = y_LName.get()
-    Contact = y_Contact()
-    CAdd = y_CAdd()
-    CNum = y_CNum.get()
-    CMail = y_CMail.get()
-    id = input ('Please provide your unique id')
+    First_Name = y_First_Name.get()
+    Last_Name = y_Last_Name.get()
+    ContactID = y_ContactID()
+    CustomerID = y_CustomerID()
 
-    if(Name=="" or LName=="" or Contact=="" or CAdd=="" or CNum=="" or CMail==""):
+    if(CustomerID=="" or First_Name=="" or Last_Name=="" or ContactID=="" ):
         MessageBox.showinfo('Update Status', 'All fields are required')
     else:
-        conn = mysql.connect(host="localhost", user="root", password="", database="Bookstore DB")
+        conn = mysql.connect(host='127.0.0.1', port=3306, user="root", password="", database="Bookstore DB")
         cursor = conn.cursor()
-        cursor.execute("update Customer set Name='" + Name +"', LName='" + LName +"', Contact='" + Contact +"',CAdd='" + CAdd +"', CNum='" + CNum +"', CMail='" + CMail +"' where id='"+ id +"'")
+        cursor.execute("update Customer set First_Name='" + First_Name +"', Last_Name='" + Last_Name +"', ContactID='" + ContactID +"' where CustomerID='"+ CustomerID +"'")
         cursor.execute('commit')
 
-        y_Name.delete(0, 'end')
-        y_LName.delete(0, 'end')
-        y_Contact.delete(0, 'end')
-        y_CAdd.delete(0, 'end')
-        y_CNum.delete(0, 'end')
-        y_CMail.delete(0, 'end')
+        y_First_Name.delete(0, 'end')
+        y_Last_Name.delete(0, 'end')
+        y_ContactID.delete(0, 'end')
+        y_CustomerID.delete(0, 'end')
         MessageBox.showinfo('Update Status', 'Record updated!')
         conn.close()
 
 def get():
-    if (y_LName.get() == "" and y_CMail.get() == ""):
+    if (y_Last_Name.get() == "" and y_CustomerID.get() == ""):
         MessageBox.showinfo('Retrieve Status', 'Your email and last name are compulsory for record retrieval')
     else:
-        conn = mysql.connect(host="localhost", user="root", password="", database="Bookstore DB")
+        conn = mysql.connect(host='127.0.0.1', port=3306, user="root", password="", database="Bookstore DB")
         cursor = conn.cursor()
-        cursor.execute("select * from Customer where LName =='" + y_LName.get() +" and CMail =='" + y_CMail.get() +"'")
+        cursor.execute("select * from Customer where Last_Name =='" + y_Last_Name.get() +" and CustomerID =='" + y_CustomerID.get() +"'")
         rows = cursor.retrieveall()
 
         for row in rows:
-            y_Name.insert(0, row[1])
-            y_LName.insert(0, row[2])
-            y_Contact.insert(0, row[3])
-            y_CAdd.insert(0, row[4])
-            y_CNum.insert(0, row[5])
-            y_CMail.insert(0, row[6])
+            y_CustomerID.insert(0, row[1])
+            y_First_Name.insert(0, row[2])
+            y_Last_Name.insert(0, row[3])
+            y_ContactID.insert(0, row[4])
             
-
-        
         MessageBox.showinfo('Retrieve Status', 'Record deleted!')
         conn.close()
     
@@ -97,41 +82,30 @@ root = Tk()
 root.geometry('600x300')
 root.title('Bookstore Database')
 
-Name = Label(root, text='First Name', font =('bold', 10))
-Name.place(x=20, y=30)
+CustomerID = Label(root, text='ID', font =('bold', 10))
+CustomerID.place(x=20, y=30)
 
-LName = Label(root, text='Last Name', font =('bold', 10))
-LName.place(x=20, y=60)
+First_Name = Label(root, text='First Name', font =('bold', 10))
+First_Name.place(x=20, y=60)
 
-Contact = Label(root, text='ContactID', font =('bold', 10))
-Contact.place(x=20, y=90)
+Last_Name = Label(root, text='Last Name', font =('bold', 10))
+Last_Name.place(x=20, y=90)
 
-CAdd = Label(root, text='Address', font =('bold', 10))
-CAdd.place(x=20, y=120)
+ContactID = Label(root, text='ContactID', font =('bold', 10))
+ContactID.place(x=20, y=120)
 
-CNum = Label(root, text='Phone number', font =('bold', 10))
-CNum.place(x=20, y=150)
+y_CustomerID= Entry()
+y_CustomerID.place(x=150, y=30)
 
-CMail = Label(root, text='Email', font =('bold', 10))
-CMail.place(x=20, y=180);
+y_First_Name= Entry()
+y_First_Name.place(x=150, y=60)
 
-y_Name= Entry()
-y_Name.place(x=150, y=30)
+y_Last_Name= Entry()
+y_Last_Name.place(x=150, y=90)
 
-y_LName= Entry()
-y_LName.place(x=150, y=60)
+y_ContactID= Entry()
+y_ContactID.place(x=150, y=120)
 
-y_Contact= Entry()
-y_Contact.place(x=150, y=90)
-
-y_CAdd= Entry()
-y_CAdd.place(x=150, y=120)
-
-y_CNum= Entry()
-y_CNum.place(x=150, y=150)
-
-y_CMail= Entry()
-y_CMail.place(x=150, y=180)
 
 create = Button(root, text='Create', font =('italic', 10), bg='white', command=create)
 create.place(x=50, y=210)
