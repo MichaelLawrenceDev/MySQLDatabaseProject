@@ -13,7 +13,7 @@ CREATE TABLE CAddress(
 );
 
 CREATE TABLE CNumber(
-	Phone_Number int,
+	Phone_Number bigint,
 	ContactID int foreign key references Contact_Details(ContactID)
 		ON DELETE CASCADE,
 	primary key(Phone_Number, ContactID)
