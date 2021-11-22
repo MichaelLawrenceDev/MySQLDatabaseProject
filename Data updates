@@ -1,0 +1,111 @@
+update Supplier_Rep 
+set FK_SupplierID = 123
+where First_Name = 'Abby';
+
+update Supplier_Rep 
+set FK_SupplierID = 234
+where First_Name = 'Bryan';
+
+update Supplier_Rep 
+set FK_SupplierID = 345
+where First_Name = 'Micheal';
+
+update Supplier_Rep 
+set FK_SupplierID = 456
+where First_Name = 'Ray';
+
+update Books
+set FK_SupplierID = 456
+where Title = 'Gypsy Rose';
+
+update Books
+set FK_SupplierID = 345
+where Title = 'World War I';
+
+update Books
+set FK_SupplierID = 123
+where Title = 'Im O. J.';
+
+update Books
+set FK_SupplierID = 234
+where Title = 'The story of Anne Frank';
+
+update Books
+set FK_SupplierID = 345
+where Title = 'Alice and the Wonderland';
+
+update Order_Items
+set FK_ISBN = 1904291740637
+where Item_Number = 105;
+
+update Order_Items
+set FK_ISBN = 2746294758264
+where Item_Number = 276;
+
+update Order_Items
+set Item_Price = 30.10
+where Item_Number = 276;
+
+update Order_Items
+set FK_ISBN = 2846194650378
+where Item_Number = 658;
+
+update Order_Items
+set Item_Price = 48.99
+where Item_Number = 658;
+
+update Order_Items
+set FK_ISBN = 2846592746591
+where Item_Number = 769;
+
+update Order_Items
+set FK_ISBN = 4238729472947
+where Item_Number = 976;
+
+update Order_Items
+set Item_Price = 65.15
+where Item_Number = 976;
+
+update Order_Items
+set FK_OrderID = 25384
+where Item_Number = 105;
+
+update Order_Items
+set FK_OrderID = 29474
+where Item_Number = 769;
+
+update Order_Items
+set FK_OrderID = 38462
+where Item_Number = 976;
+
+update Order_Items
+set FK_OrderID = 83249
+where Item_Number = 658;
+
+update Order_Items
+set FK_OrderID = 73982
+where Item_Number = 276;
+
+update Orders
+set Order_Value = 25.00
+where OrderID = 73982;
+
+update Orders
+set FK_CustomerID = 1
+where OrderID = 25384;
+
+update Orders
+set FK_CustomerID = 2
+where OrderID = 29474;
+
+update Orders
+set FK_CustomerID = 3
+where OrderID = 38462;
+
+update Orders
+set FK_CustomerID = 4
+where OrderID = 73982;
+
+update Orders
+set FK_CustomerID = 7
+where OrderID = 83249;
