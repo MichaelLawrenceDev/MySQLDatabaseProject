@@ -44,7 +44,7 @@ def main():
             # Password match
             if close_form:
                 root.destroy() 
-            Customer_Form.main()
+            Customer_Form.main(username)
             return True
         else:
             messagebox.showerror("Login Failure", "Password is invalid.")
