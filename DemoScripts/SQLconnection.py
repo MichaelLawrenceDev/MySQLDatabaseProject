@@ -12,8 +12,8 @@ conn = pyodbc.connect(
   "DRIVER={SQL Server Native Client 11.0};"
   "Server=104.36.123.122,8592;"
   "Database=BookStoreDatabase;"
-  "UID=Lawrence;"
-  "PWD=assword;"
+  "UID=Customer;"
+  "PWD=Customer;"
 )
 
 read(conn)
