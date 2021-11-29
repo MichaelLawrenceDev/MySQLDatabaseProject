@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
 import Customer_Form
+import Admin_Form
 import pyodbc
 import bcrypt
 import sys
@@ -31,9 +32,25 @@ def main():
 
         enableButtons()
 
-    def login(username, password, cursor, close_form):
+    def login(username, password, cursor, close_form, allow_admin_login=True):
+        # try to login as admin.
+        if (allow_admin_login):
+            try:
+                admin_conn = pyodbc.connect(
+                    "DRIVER={SQL Server Native Client 11.0};"
+                    "Server=104.36.123.122,8592;"
+                    "Database=BookStoreDatabase;"
+                   f"UID={username};"
+                   f"PWD={password};"
+                )
+                if close_form:
+                    root.destroy()
+                Admin_Form.Start(admin_conn.cursor(), username)
+                return True
+            except:
+                pass # This should only error as failing to login via pyodbc
 
-        # get password associated with user
+        # try to log in as customer
         result = list(cursor.execute("select Password from Customer where Username='"+username+"';"))
         if len(result) == 0:
             messagebox.showerror("Login Failure", "Username does not exist")
@@ -44,7 +61,7 @@ def main():
             # Password match
             if close_form:
                 root.destroy() 
-            Customer_Form.main(username)
+            Customer_Form.Start(cursor, username)
             return True
         else:
             messagebox.showerror("Login Failure", "Password is invalid.")
@@ -103,7 +120,7 @@ def main():
                 messagebox.showerror("Signup Failure", er)
             
             newForm.destroy()
-            login(reqInfo[0], reqInfo[1], cursor, True)
+            login(reqInfo[0], reqInfo[1], cursor, True, False)
 
         ### Signup Form ###
 
@@ -172,7 +189,6 @@ def main():
     logged_in = False
     if (len(sys.argv) == 3):
         if login(sys.argv[1], sys.argv[2], conn.cursor(), False):
-            print("Successfully Logged in")
             logged_in = True
         else:
             print("Login information provided is invalid.")
