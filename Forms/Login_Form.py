@@ -116,8 +116,17 @@ def main():
             except:
                 CustomerID = 0
             try:
+                # Assign contact_ID
+                cursor.execute(f"""
+                    select max(ContactID) from Contact_Details
+                """)
+                ContactID = int(list(cursor)[0][0]) + 1
+                cursor.execute(f"""
+                    insert into Contact_Details values ({ContactID})
+                """)
+                # create password and and submit to server
                 passwordHash = bcrypt.hashpw(reqInfo[1].encode(), bcrypt.gensalt()).decode()
-                cursor.execute(f"insert into Customer values ({CustomerID}, '{reqInfo[3]}', '{reqInfo[4]}', NULL, '{reqInfo[0]}', '{passwordHash}');")
+                cursor.execute(f"insert into Customer values ({CustomerID}, '{reqInfo[3]}', '{reqInfo[4]}', {ContactID}, '{reqInfo[0]}', '{passwordHash}');")
                 conn.commit()
             except Exception as er:
                 messagebox.showerror("Signup Failure", er)
