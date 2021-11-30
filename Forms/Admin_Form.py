@@ -17,3 +17,5 @@ import pyodbc
 def Start(admin_cursor, username):
     # cursor should already be connected.
     print("Logging in as admin under username: " + username)
+    admin_cursor.execute("select * from Customer")
+    print(list(admin_cursor))
