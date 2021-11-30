@@ -19,3 +19,44 @@ import pyodbc
 def Start(cursor, username):
     # cursor should already be connected.
     print("Logging in under Customer's username: ", username)
+
+    # Select all emails from customer with username
+    cursor.execute(f"""
+        select Email from CMail, Customer where 
+        Customer.ContactID = CMail.ContactID and 
+        Customer.Username = '{username}'
+    """)
+    print("Emails: ", list(cursor))
+
+    # Select all addresses from customer with username
+    cursor.execute(f"""
+        select Address from CAddress, Customer where
+        Customer.ContactID = CAddress.ContactID and
+        Customer.Username = '{username}'
+    """)
+    print("Addresses: ", list(cursor))
+
+    # Select all phone numbers from customer with username
+    cursor.execute(f"""
+        select Phone_Number from CNumber, Customer where
+        Customer.ContactID = CNumber.ContactID and
+        Customer.Username = '{username}'
+    """)
+    print("Phone Numbers: ", list(cursor))
+
+    # To add contact details to a customer
+    #   1. get contactID of customer
+    #   2. insert all emails with contactID
+    #   3. insert all phone numbers
+    #   4. insert all addresses
+    #
+    # To change details, use MySQL Update query
+
+
+    # How to get ContactID
+    query_answer = cursor.execute(f"""
+        select ContactID from Customer where
+        Username = '{username}'
+    """)
+    contactID = int(list(query_answer)[0][0])
+    print(f"ContactID: {contactID}")
