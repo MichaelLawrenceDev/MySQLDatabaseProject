@@ -27,13 +27,15 @@ def main():
             messagebox.showwarning("Username Error", "Please enter username.")
         elif (password == ''):
             messagebox.showwarning("Password Error", "Please enter password.")
-        elif login(username, password, conn.cursor(), True):
+        if login(username, password, conn.cursor(), True):
             return
 
         enableButtons()
 
     def login(username, password, cursor, close_form, allow_admin_login=True):
+
         # try to login as admin.
+        admin_login_success = False
         if (allow_admin_login):
             try:
                 admin_conn = pyodbc.connect(
@@ -45,27 +47,29 @@ def main():
                 )
                 if close_form:
                     root.destroy()
-                Admin_Form.Start(admin_conn.cursor(), username)
-                return True
+                admin_login_success = True
             except:
                 pass # This should only error as failing to login via pyodbc
-
-        # try to log in as customer
-        result = list(cursor.execute("select Password from Customer where Username='"+username+"';"))
-        if len(result) == 0:
-            messagebox.showerror("Login Failure", "Username does not exist")
-            return False
-
-        user_hash = result[0][0].encode()
-        if bcrypt.checkpw(password.encode(), user_hash):
-            # Password match
-            if close_form:
-                root.destroy() 
-            Customer_Form.Start(cursor, username)
+        if (admin_login_success):
+            Admin_Form.Start(admin_conn.cursor(), username)
             return True
         else:
-            messagebox.showerror("Login Failure", "Password is invalid.")
-        return False
+            # try to log in as customer
+            result = list(cursor.execute("select Password from Customer where Username='"+username+"';"))
+            if len(result) == 0:
+                messagebox.showerror("Login Failure", "Username does not exist")
+                return False
+
+            user_hash = result[0][0].encode()
+            if bcrypt.checkpw(password.encode(), user_hash):
+                # Password match
+                if close_form:
+                    root.destroy() 
+                Customer_Form.Start(cursor, username)
+                return True
+            else:
+                messagebox.showerror("Login Failure", "Password is invalid.")
+            return False
 
     def signupForm():
 
@@ -98,7 +102,6 @@ def main():
             cursor = conn.cursor()
             cursor.execute("select Username from Customer where Username='"+reqInfo[0]+"';")
             if len(list(cursor)) != 0:
-                print("Username provided exists in database")
                 messagebox.showerror("Signup Failure", "Username provided already exists.")
                 signupButton['state'] = ACTIVE
                 return
@@ -125,7 +128,6 @@ def main():
         ### Signup Form ###
 
         disableButtons()
-        print("Inside signup")
         newForm = Toplevel(root)
         newForm.title("Sign Up")
 
