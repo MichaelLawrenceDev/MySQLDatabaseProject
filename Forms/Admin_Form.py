@@ -42,7 +42,7 @@ def CustomerDetails(admin_cursor, username):
 def AuthorDetails(admin_cursor, username):
     # cursor should already be connected.
     print("Logging in as admin under username: " + username)
-    admin_cursor.execute("update Author_of_the_books set First_Name='" + First_Name +"', Last_Name='" + Last_Name +"', Gender='" + Gender +"', Date_of_Birth='" + Date_of_ Birth +"', ContactID='" + ContactID +"' where AuthorID='"+ AuthorID +"'")
+    admin_cursor.execute("update Author_of_the_books set First_Name='" + First_Name +"', Last_Name='" + Last_Name +"', Gender='" + Gender +"', Date_of_Birth='" + Date_of_Birth +"', ContactID='" + ContactID +"' where AuthorID='"+ AuthorID +"'")
     print(list(admin_cursor))
 
 #   8. Update Book Details
@@ -53,7 +53,29 @@ def BookDetails(admin_cursor, username):
     print(list(admin_cursor))
     
 #   9. Remove customer/author/book/supplier from database
-#
+def Remove(admin_cursor, username):
+    print("Logging in as admin under username: " + username)
+    
+    def RemoveCustomer():
+        CustomerID = y_CustomerID.get()
+        First_Name = y_First_Name.get()
+        Last_Name = y_Last_Name.get()
+        ContactID = y_ContactID.get()
+        Username = y_Username.get()
+        Password = y_Password.get()
+        admin_cursor.execute("delete from Customer where CustomerID=='"+ y_CustomerID.get() +"'")
+        admin_cursor.execute('commit')
+
+        y_CustomerID.remove(0, 'end')
+        y_First_Name.remove(0, 'end')
+        y_Last_Name.remove(0, 'end')
+        y_ContactID.remove(0, 'end')
+        y_Username.remove(0, 'end')
+        y_Password.remove(0, 'end')
+        y_CustomerID.delete(0, 'end')
+        
+        
+   
 
 # Entry into Admin_Form.py
 def Start(admin_cursor, username):
