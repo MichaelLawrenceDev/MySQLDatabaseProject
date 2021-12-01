@@ -25,23 +25,33 @@ def Start(admin_conn, username):
     
     def View():
         def ViewCustomer():
+            view1Form = Toplevel(root)
+            view1Form.title("Customer Details")
             cursor.execute("select * from Customer")
             
         def ViewOrder():
+            view2Form = Toplevel(root)
+            view2Form.title("Order Details")
             cursor.execute("select * from Orders")
-            print(list(admin_cursor))
+            print(list(cursor.execute))
 
         def ViewBooks():
+            view3Form = Toplevel(root)
+            view3Form.title("Book Details")
             cursor.execute("select * from Books")
-            print(list(admin_cursor))
+            print(list(cursor.execute))
 
         def ViewSupplier():
-            admin_cursor.execute("select * from Supplier")
-            print(list(admin_cursor))
+            view4Form = Toplevel(root)
+            view4Form.title("Supplier Details")
+            cursor.execute("select * from Supplier")
+            print(list(cursor.execute))
 
         def ViewAuthor():
+            view5Form = Toplevel(root)
+            view5Form.title("Author Details")
             cursor.execute("select * from Author_of_the_books")
-            print(list(admin_cursor))
+            print(list(cursor.execute))
         
         view1Button = Button(root, text="View Customers", command = ViewCustomer)
         view2Button = Button(root, text="View Orders", command = ViewOrder)
@@ -57,22 +67,74 @@ def Start(admin_conn, username):
 
     def Update():
         def CustomerDetails():
-            cursor.execute("update Customer set First_Name='" + First_Name +"', Last_Name='" + Last_Name +"', ContactID='" + ContactID +"', Username='" + Username +"' where CustomerID='"+ CustomerID +"'")
-            print(list(admin_cursor))
+            update1Form = Toplevel(root)
+            update1Form.title("Update Customer Details")
+
+            def closeupdate1Info():
+                enableButtons()
+                update1Form.destroy()
+
+            CustomerIDLabel = Label(update1Form, text="CustomerID:")
+            CustomerIDText = Entry()
+            First_NameLabel = Label(update1Form, text="First_Name:")
+            First_NameText = Entry()
+            Last_NameLabel = Label(update1Form, text="Last_Name:")
+            Last_NameText = Entry()
+            ContactIDLabel = Label(update1Form, text="ContactID:")
+            ContactIDText = Entry()
+            UsernameLabel = Label(update1Form, text="Username:")
+            UsernameText = Entry()
+            PasswordLabel = Label(update1Form, text="Password:")
+            PasswordText = Entry()
+        
+            CustomerIDLabel.place(x=20, y=50)
+            CustomerIDText.place(x=150, y=50)
+            First_NameLabel.place(x=20, y=80)
+            First_NameText.place(x=150, y=80)
+            Last_NameLabel.place(x=20, y=110)
+            Last_NameText.place(x=150, y=110)
+            ContactIDLabel.place(x=20, y=140)
+            ContactIDText.place(x=150, y=140)
+            UsernameLabel.place(x=20, y=170)
+            UsernameText.place(x=150, y=170)
+            PasswordLabel.place(x=20, y=200)
+            PasswordText.place(x=150 ,y=200 )
+            
+            def update1Info():
+                CustomerID = CustomerIDText.get()
+                First_Name = First_NameText.get()
+                Last_Name = Last_NameText.get()
+                #ContactID = ContactIDText.get()
+                Username = UsernameText.get()
+                Password = PasswordText.get()
+                query_answer = cursor.execute(f"""select ContactID from Customer where Username = '{username}'""")
+                contactID = int(list(query_answer)[0][0])
+                
+            update = Button(update1Form, text="Update", command = update1Info)
+            update.place(x=200, y=250)
+        
+            #cursor.execute("update Customer set First_Name='" + First_Name +"', Last_Name='" + Last_Name +"', ContactID='" + ContactID +"', Username='" + Username +"' where CustomerID='"+ CustomerID +"'")
+            #print(list(admin_cursor))
 
         def AuthorDetails():
+            update2Form = Toplevel(root)
+            update2Form.title("Update Author Details")
             cursor.execute("update Author_of_the_books set First_Name='" + First_Name +"', Last_Name='" + Last_Name +"', Gender='" + Gender +"', Date_of_Birth='" + Date_of_Birth +"', ContactID='" + ContactID +"' where AuthorID='"+ AuthorID +"'")
             print(list(admin_cursor))
 
         def BookDetails():
+            update3Form = Toplevel(root)
+            update3Form.title("Update Book Details")
             cursor.execute("update Books set Title='" + Title +"', Publication_Date='" + Publication_Date +"', Price='" + Price +"', User_Reviews='" + User_Reviews +"' where ISBN='"+ ISBN +"'")
             print(list(admin_cursor))
 
     
-        update1Button = Button(root, text="Update Author Details", command = AuthorDetails)
-        update2Button = Button(root, text="Update Book Details", command = BookDetails)
+        update1Button = Button(root, text="Update Customer Details", command = CustomerDetails)
+        update2Button = Button(root, text="Update Author Details", command = AuthorDetails)
+        update3Button = Button(root, text="Update Book Details", command = BookDetails)
         update1Button.place(x=200, y=30)
         update2Button.place(x=200, y=60)
+        update3Button.place(x=200, y=90)
     
 
     def Remove():
@@ -165,3 +227,4 @@ def Start(admin_conn, username):
     updateButton.place(x=20, y=60)
     removeButton = Button(root, text="Delete", command = Remove)
     removeButton.place(x=20, y=90)
+
