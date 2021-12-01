@@ -147,12 +147,52 @@ def Start(conn, username):
             removeForm.destroy()
 
     
-    viewButton = Button(cForm, text="View", command = viewDetails)
-    addButton = Button(cForm, text="Add", command = addDetails)
-    removeButton = Button(cForm, text="Remove", command = removeDetails)
+    def viewBooks():
+        disableButtons()
+        booksForm = Toplevel(cForm)
+        booksForm.title("Browse Books")
+        
+        def closeBrowseForm():
+            enableButtons()
+            booksForm.destroy()
+
+        def search(): #DOESN'T WORK YET
+            bookTitle = cursor.execute(f"""select Title from Books where Title like '%key%' order by Title""")
+            s = Listbox(booksForm, width = 35)
+            Scrollbar(s, orient="vertical")
+            
+            for x in bookTitle:
+                s.insert(END, *x)
+
+            s.grid(column=1, row=1, sticky='NS')
+            
+        SearchLabel = Label(booksForm, text="Search keyword:")
+        SearchText = Entry(booksForm, width=35)
+        key = SearchText.get()
+        SearchButton = Button(booksForm, text="Search", command = search)
+        SearchLabel.grid(row=0, column=0)
+        SearchText.grid(row=0, column=1)
+        SearchButton.grid(row=0, column=2)
+        
+        #print books
+        bookTitle = cursor.execute(f"""select Title from Books order by Title""")
+        b = Listbox(booksForm, width = 35)
+        Scrollbar(b, orient="vertical")
+        booksForm.geometry("400x300")
+        
+        for x in bookTitle:
+            b.insert(END, *x)
+
+        b.grid(column=1, row=1, sticky='NS')
+        
+    viewButton = Button(cForm, text="View Account", command = viewDetails)
+    addButton = Button(cForm, text="Add to Account Details", command = addDetails)
+    removeButton = Button(cForm, text="Remove Account Details", command = removeDetails)
     viewButton.grid(row=1, column=1)
     addButton.grid(row=2, column=1)
     removeButton.grid(row=3, column=1)
+    browse = Button(cForm, text="Browse Books", command = viewBooks)
+    browse.grid(row=4, column=1)
     
     def disableButtons():
         viewButton['state'] = DISABLED
