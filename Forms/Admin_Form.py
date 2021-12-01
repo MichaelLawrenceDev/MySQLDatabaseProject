@@ -27,29 +27,34 @@ def Start(admin_conn, username):
         def ViewCustomer():
             view1Form = Toplevel(root)
             view1Form.title("Customer Details")
+            view1Form.geometry("600x300")
             cursor.execute("select * from Customer")
             
         def ViewOrder():
             view2Form = Toplevel(root)
             view2Form.title("Order Details")
+            view2Form.geometry("600x300")
             cursor.execute("select * from Orders")
             print(list(cursor.execute))
 
         def ViewBooks():
             view3Form = Toplevel(root)
             view3Form.title("Book Details")
+            view3Form.geometry("600x300")
             cursor.execute("select * from Books")
             print(list(cursor.execute))
 
         def ViewSupplier():
             view4Form = Toplevel(root)
             view4Form.title("Supplier Details")
+            view4Form.geometry("600x300")
             cursor.execute("select * from Supplier")
             print(list(cursor.execute))
 
         def ViewAuthor():
             view5Form = Toplevel(root)
             view5Form.title("Author Details")
+            view5Form.geometry("600x300")
             cursor.execute("select * from Author_of_the_books")
             print(list(cursor.execute))
         
@@ -69,6 +74,7 @@ def Start(admin_conn, username):
         def CustomerDetails():
             update1Form = Toplevel(root)
             update1Form.title("Update Customer Details")
+            update1Form.geometry("400x300")
 
             def closeupdate1Info():
                 enableButtons()
@@ -88,17 +94,15 @@ def Start(admin_conn, username):
             PasswordText = Entry()
         
             CustomerIDLabel.place(x=20, y=50)
-            CustomerIDText.place(x=150, y=50)
+            CustomerIDText.place(x=200, y=50)
             First_NameLabel.place(x=20, y=80)
-            First_NameText.place(x=150, y=80)
+            First_NameText.place(x=200, y=80)
             Last_NameLabel.place(x=20, y=110)
-            Last_NameText.place(x=150, y=110)
-            ContactIDLabel.place(x=20, y=140)
-            ContactIDText.place(x=150, y=140)
-            UsernameLabel.place(x=20, y=170)
-            UsernameText.place(x=150, y=170)
-            PasswordLabel.place(x=20, y=200)
-            PasswordText.place(x=150 ,y=200 )
+            Last_NameText.place(x=200, y=110)
+            UsernameLabel.place(x=20, y=140)
+            UsernameText.place(x=200, y=140)
+            PasswordLabel.place(x=20, y=170)
+            PasswordText.place(x=200 ,y=170)
             
             def update1Info():
                 CustomerID = CustomerIDText.get()
@@ -107,27 +111,109 @@ def Start(admin_conn, username):
                 #ContactID = ContactIDText.get()
                 Username = UsernameText.get()
                 Password = PasswordText.get()
-                query_answer = cursor.execute(f"""select ContactID from Customer where Username = '{username}'""")
-                contactID = int(list(query_answer)[0][0])
+                if(CustomerID=="" or First_Name=="" or Last_Name=="" or Username=="" ):
+                    MessageBox.showinfo('Update Status', 'All fields are required')
+                else:
+                    cursor.execute("update Customer set First_Name='" + First_Name +"', Last_Name='" + Last_Name +"', Username='" + Username +"' where CustomerID='"+ CustomerID +"'")
+                    cursor.execute('commit')
                 
             update = Button(update1Form, text="Update", command = update1Info)
             update.place(x=200, y=250)
         
-            #cursor.execute("update Customer set First_Name='" + First_Name +"', Last_Name='" + Last_Name +"', ContactID='" + ContactID +"', Username='" + Username +"' where CustomerID='"+ CustomerID +"'")
-            #print(list(admin_cursor))
-
+            
         def AuthorDetails():
             update2Form = Toplevel(root)
             update2Form.title("Update Author Details")
-            cursor.execute("update Author_of_the_books set First_Name='" + First_Name +"', Last_Name='" + Last_Name +"', Gender='" + Gender +"', Date_of_Birth='" + Date_of_Birth +"', ContactID='" + ContactID +"' where AuthorID='"+ AuthorID +"'")
-            print(list(admin_cursor))
+            update2Form.geometry("400x300")
+
+            def closeupdate2Info():
+                enableButtons()
+                update2Form.destroy()
+
+            AuthorIDLabel = Label(update2Form, text="AuthorID:")
+            AuthorIDText = Entry()
+            First_NameLabel = Label(update2Form, text="First_Name:")
+            First_NameText = Entry()
+            Last_NameLabel = Label(update2Form, text="Last_Name:")
+            Last_NameText = Entry()
+            GenderLabel = Label(update2Form, text="Gender:")
+            GenderText = Entry()
+            Date_of_BirthLabel = Label(update2Form, text="Date_of_Birth:")
+            Date_of_BirthText = Entry()
+           
+        
+            AuthorIDLabel.place(x=20, y=50)
+            AuthorIDText.place(x=200, y=50)
+            First_NameLabel.place(x=20, y=80)
+            First_NameText.place(x=200, y=80)
+            Last_NameLabel.place(x=20, y=110)
+            Last_NameText.place(x=200, y=110)
+            GenderLabel.place(x=20, y=140)
+            GenderText.place(x=200, y=140)
+            Date_of_BirthLabel.place(x=20, y=170)
+            Date_of_BirthText.place(x=200, y=170)
+        
+            
+            def update2Info():
+                AuthorID =AuthorIDText.get()
+                First_Name = First_NameText.get()
+                Last_Name = Last_NameText.get()
+                Gender = GenderText.get()
+                Date_of_Birth = Date_of_BirthText.get()
+
+                if(AuthorID=="" or First_Name=="" or Last_Name=="" or Gender=="" or Date_of_Birth=="" ):
+                    MessageBox.showinfo('Update Status', 'All fields are required')
+                else:
+                    cursor.execute("update Author_of_the_Books set First_Name='" + First_Name +"', Last_Name='" + Last_Name +"', Gender='" + Gender +"', Date_of_Birth='" + Date_of_Birth + "' where AuthorID='"+ AuthorID +"'")
+                    cursor.execute('commit')
+                
+            update2 = Button(update2Form, text="Update", command = update2Info)
+            update2.place(x=200, y=250)
+            
 
         def BookDetails():
             update3Form = Toplevel(root)
             update3Form.title("Update Book Details")
-            cursor.execute("update Books set Title='" + Title +"', Publication_Date='" + Publication_Date +"', Price='" + Price +"', User_Reviews='" + User_Reviews +"' where ISBN='"+ ISBN +"'")
-            print(list(admin_cursor))
+            update3Form.geometry("400x300")
+            
+            def closeupdate3Info():
+                enableButtons()
+                update3Form.destroy()
 
+            ISBNLabel = Label(update3Form, text="ISBN:")
+            ISBNText = Entry()
+            TitleLabel = Label(update3Form, text="Title:")
+            TitleText = Entry()
+            Publication_DateLabel = Label(update3Form, text="Publication_Date:")
+            Publication_DateText = Entry()
+            User_ReviewsLabel = Label(update3Form, text="User_Reviews:")
+            User_ReviewsText = Entry()
+        
+            ISBNLabel.place(x=20, y=50)
+            ISBNText.place(x=200, y=50)
+            TitleLabel.place(x=20, y=80)
+            TitleText.place(x=200, y=80)
+            Publication_DateLabel.place(x=20, y=110)
+            Publication_DateText.place(x=200, y=110)
+            User_ReviewsLabel.place(x=20, y=140)
+            User_ReviewsText.place(x=200, y=140)
+        
+            
+            def update3Info():
+                ISBN =ISBNText.get()
+                Title = TitleText.get()
+                Publication_Date = Publication_DateText.get()
+                Price = PriceText.get()
+                User_Reviews = User_ReviewsText.get()
+                
+                if(ISBN=="" or Title=="" or Publication_Date=="" or Price=="" or User_Reviews=="" ):
+                    MessageBox.showinfo('Update Status', 'All fields are required')
+                else:
+                    cursor.execute("update Books set Title='" + Title +"', Publication_Date='" + Publication_Date +"', Price='" + Price +"', User_Reviews='" + User_Reviews + "' where ISBN='"+ ISBN +"'")
+                    cursor.execute('commit')
+                
+            update3 = Button(update3Form, text="Update", command = update3Info)
+            update3.place(x=250, y=250)
     
         update1Button = Button(root, text="Update Customer Details", command = CustomerDetails)
         update2Button = Button(root, text="Update Author Details", command = AuthorDetails)
@@ -139,66 +225,161 @@ def Start(admin_conn, username):
 
     def Remove():
         
-        def RemoveCustomer():
-            CustomerID = y_CustomerID.get()
-            First_Name = y_First_Name.get()
-            Last_Name = y_Last_Name.get()
-            ContactID = y_ContactID.get()
-            Username = y_Username.get()
-            Password = y_Password.get()
-            cursor.execute("delete from Customer where CustomerID=='"+ y_CustomerID.get() +"'")
-            cursor.execute('commit')
+        def RemoveCustomer(): #not complete
+            remove1Form = Toplevel(root)
+            remove1Form.title("Remove Customer")
+            remove1Form.geometry("600x300")
 
-            y_CustomerID.Remove(0, 'end')
-            y_First_Name.Remove(0, 'end')
-            y_Last_Name.Remove(0, 'end')
-            y_ContactID.Remove(0, 'end')
-            y_Username.Remove(0, 'end')
-            y_Password.Remove(0, 'end')
-            y_CustomerID.Remove(0, 'end')
+            def closeupremove1Info():
+                enableButtons()
+                remove1Form.destroy()
+            CustomerIDLabel = Label(remove1Form, text="CustomerID:")
+            CustomerIDText = Entry()
+            First_NameLabel = Label(remove1Form, text="First_Name:")
+            First_NameText = Entry()
+            Last_NameLabel = Label(remove1Form, text="Last_Name:")
+            Last_NameText = Entry()
+            ContactIDLabel = Label(remove1Form, text="ContactID:")
+            ContactIDText = Entry()
+            UsernameLabel = Label(remove1Form, text="Username:")
+            UsernameText = Entry()
+            PasswordLabel = Label(remove1Form, text="Password:")
+            PasswordText = Entry()
         
+            CustomerIDLabel.place(x=20, y=50)
+            CustomerIDText.place(x=200, y=50)
+            First_NameLabel.place(x=20, y=80)
+            First_NameText.place(x=200, y=80)
+            Last_NameLabel.place(x=20, y=110)
+            Last_NameText.place(x=200, y=110)
+            UsernameLabel.place(x=20, y=140)
+            UsernameText.place(x=200, y=140)
+            PasswordLabel.place(x=20, y=170)
+            PasswordText.place(x=200 ,y=170)
+
+            def remove1Info():
+                CustomerID = CustomerIDText.get()
+                First_Name = First_NameText.get()
+                Last_Name = Last_NameText.get()
+                #ContactID = ContactIDText.get()
+                Username = UsernameText.get()
+                Password = PasswordText.get()
+                
+                if (CustomerIDText.get() ==""):
+                    MessageBox.showinfo('Delete Status', 'CustomerID is compulsory for delete')
+                else:
+                    cursor.execute("delete *from Customer where CustomerID=='"+ CustomerIDText.get() +"'")
+                    cursor.execute('commit')
+
+                CustomerIDText.Remove(0, 'end')
+                First_NameText.Remove(0, 'end')
+                Last_NameText.Remove(0, 'end')
+                #ContactIDText.Remove(0, 'end')
+                UsernameText.Remove(0, 'end')
+                PasswordText.Remove(0, 'end')
+    
+            remove = Button(remove1Form, text="Remove", command = remove1Info)
+            remove.place(x=200, y=250)
+
+            
         def RemoveAuthor():
-            AuthorID = y_AuthorID.get()
-            First_Name = y_First_Name.get()
-            Last_Name = y_Last_Name.get()
-            Gender = y_Gender.get()
-            Date_of_Birth = y_Date_of_Birth.get()
-            ContactID = y_ContactID.get()
-            cursor.execute("delete from Author_of_the_books where AuthorID=='"+ y_AuthorID.get() +"'")
-            cursor.execute('commit')
+            remove2Form = Toplevel(root)
+            remove2Form.title("Remove Author")
+            remove2Form.geometry("600x300")
+
+            def closeupremove2Info():
+                enableButtons()
+                remove2Form.destroy()
+                
+            AuthorIDLabel = Label(remove2Form, text="AuthorID:")
+            AuthorIDText = Entry()
+            First_NameLabel = Label(remove2Form, text="First_Name:")
+            First_NameText = Entry()
+            Last_NameLabel = Label(remove2Form, text="Last_Name:")
+            Last_NameText = Entry()
+            GenderLabel = Label(remove2Form, text="Gender:")
+            GenderText = Entry()
+            Date_of_BirthLabel = Label(remove2Form, text="Date_of_Birth:")
+            Date_of_BirthText = Entry()
+           
         
-            y_AuthorID.Remove(0, 'end')
-            y_First_Name.Remove(0, 'end')
-            y_Last_Name.Remove(0, 'end')
-            y_Gender.Remove(0, 'end')
-            y_Date_of_Birth.Remove(0, 'end')
-            y_ContactID.Remove(0, 'end')
+            AuthorIDLabel.place(x=20, y=50)
+            AuthorIDText.place(x=200, y=50)
+            First_NameLabel.place(x=20, y=80)
+            First_NameText.place(x=200, y=80)
+            Last_NameLabel.place(x=20, y=110)
+            Last_NameText.place(x=200, y=110)
+            GenderLabel.place(x=20, y=140)
+            GenderText.place(x=200, y=140)
+            Date_of_BirthLabel.place(x=20, y=170)
+            Date_of_BirthText.place(x=200, y=170)
+                
+            def remove2Info():
+                AuthorID =AuthorIDText.get()
+                First_Name = First_NameText.get()
+                Last_Name = Last_NameText.get()
+                Gender = GenderText.get()
+                Date_of_Birth = Date_of_BirthText.get()
+
+                if (AuthorIDText.get() == ""):
+                    MessageBox.showinfo('Delete Status', 'AuthorID is compulsory for delete')
+                else:
+                    cursor.execute("delete * from Author_of_the_books where AuthorID=='"+ AuthorIDText.get() +"'")
+                    cursor.execute('commit')
         
+                    AuthorIDText.Remove(0, 'end')
+                    First_NameText.Remove(0, 'end')
+                    Last_NameText.Remove(0, 'end')
+                    GenderText.Remove(0, 'end')
+                    Date_of_BirthText.Remove(0, 'end')
+                    ContactIDText.Remove(0, 'end')
+                    MessageBox.showinfo('Delete Status', 'Record deleted!')
+            remove2 = Button(remove2Form, text="Remove", command = remove2Info)
+            remove2.place(x=200, y=250)
+            
         def RemoveBook():
-            ISBN = y_ISBN.get()
-            Title = y_Title.get()
-            Publication_Date = y_Publication_Date.get()
-            Price = y_Price.get()
-            User_Reviews = y_User_Reviews.get()
-            SupplierID = y_SupplierID.get()
-            cursor.execute("delete from Books where ISBN=='"+ y_ISBN.get() +"'")
-            cursor.execute('commit')
+            remove3Form = Toplevel(root)
+            remove3Form.title("Remove Book")
+            remove3Form.geometry("600x300")
+            
+            ISBN = ISBNText.get()
+            Title = TitleText.get()
+            Publication_Date = Publication_DateText.get()
+            Price = PriceText.get()
+            User_Reviews = User_ReviewsText.get()
+            SupplierID = SupplierIDText.get()
+            
+            if (ISBNText.get() == ""):
+                MessageBox.showinfo('Delete Status', 'ISBN is compulsory for delete')
+            else:
+                cursor.execute("delete * from Books where ISBN=='"+ ISBNText.get() +"'")
+                cursor.execute('commit')
         
-            y_ISBN.Remove(0, 'end')
-            y_Title.Remove(0, 'end')
-            y_Publication_Date.Remove(0, 'end')
-            y_Price.Remove(0, 'end')
-            y_User_Reviews.Remove(0, 'end')
-            y_SupplierID.Remove(0, 'end')
+                ISBNText.Remove(0, 'end')
+                TitleText.Remove(0, 'end')
+                Publication_DateText.Remove(0, 'end')
+                PriceText.Remove(0, 'end')
+                User_ReviewsText.Remove(0, 'end')
+                SupplierIDText.Remove(0, 'end')
+                MessageBox.showinfo('Delete Status', 'Record deleted!')
         
         def RemoveSupplier():
-            SupplierID = y_SupplierID.get()
-            Supplier_Name = y_Supplier_Name.get()
-            cursor.execute("delete from Supplier where SupplierID=='"+ y_SupplierID.get() +"'")
-            cursor.execute('commit')
+            remove4Form = Toplevel(root)
+            remove4Form.title("Remove Supplier")
+            remove4Form.geometry("600x300")
+            
+            SupplierID = SupplierIDText.get()
+            Supplier_Name = Supplier_NameText.get()
+            
+            if (SupplierIDText.get() == ""):
+                MessageBox.showinfo('Delete Status', 'SupplierID is compulsory for delete')
+            else:
+                cursor.execute("delete * from Supplier where SupplierID=='"+ SupplierIDText.get() +"'")
+                cursor.execute('commit')
         
-            y_SupplierID.Remove(0, 'end')
-            y_Supplier_Name.Remove(0, 'end')
+                SupplierIDText.Remove(0, 'end')
+                Supplier_NameText.Remove(0, 'end')
+                MessageBox.showinfo('Delete Status', 'Record deleted!')
 
 
    
@@ -227,4 +408,3 @@ def Start(admin_conn, username):
     updateButton.place(x=20, y=60)
     removeButton = Button(root, text="Delete", command = Remove)
     removeButton.place(x=20, y=90)
-
