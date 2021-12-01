@@ -34,14 +34,9 @@ def Start(conn, username):
     cForm.title("Customer Details")
     
     def viewDetails():
-        disableButtons()
         viewForm = Toplevel(cForm)
         viewForm.title("Account Holder Details")
 
-        
-        def closeViewForm():
-            enableButtons()
-            viewForm.destory()
 
         def queryToText(query):
             text = ""
@@ -52,8 +47,6 @@ def Start(conn, username):
                     text += str(query[i][0])
             return text
 
-        # On exit, enable buttons
-        viewForm.protocol("WM_DELETE_WINDOW", closeViewForm)
             
         # Customer Details
         query = list(cursor.execute(f"""select First_Name, Last_Name from Customer where username = '{username}'"""))
@@ -64,7 +57,7 @@ def Start(conn, username):
         User = Label(viewForm, text=username)
         passwordLabel = Label(viewForm, text="Password:")
         passwordText = cursor.execute(f"""select password from Customer where username = '{username}'""")
-        Pass = Label(viewForm, text="Can you remove displaying password from this form?")
+        Pass = Label(viewForm, text="*************")
         phoneLabel = Label(viewForm, text="Phone Number:")
         query = list(cursor.execute(f"""select Phone_Number from Customer, CNumber where username = '{username}' and CNumber.ContactID = Customer.ContactID"""))
         Phone = Label(viewForm, text=queryToText(query))
@@ -140,21 +133,18 @@ def Start(conn, username):
         add = Button(addForm, text="Add", command = addInfo)
         add.grid(row=4, column=1)
 
-    def removeDetails():
-        
-        def closeRemoveForm():
-            enableButtons()
-            removeForm.destroy()
+    def removeDetails(): #DOESN'T WORK YET
+        removeForm = Toplevel(cForm)
+        removeForm.title("Delete Customer Details")
 
-    
+        rLabel = Label(removeForm, text="Not sure how to go about this yet...")
+        rLabel.grid(row=1, column=1)
+
+
+#Books
     def viewBooks():
-        disableButtons()
         booksForm = Toplevel(cForm)
         booksForm.title("Browse Books")
-        
-        def closeBrowseForm():
-            enableButtons()
-            booksForm.destroy()
 
         def search(): #DOESN'T WORK YET
             bookTitle = cursor.execute(f"""select Title from Books where Title like '%key%' order by Title""")
