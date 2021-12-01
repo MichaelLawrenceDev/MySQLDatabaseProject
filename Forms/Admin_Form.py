@@ -19,13 +19,14 @@ def Start(admin_conn, username):
     # cursor should already be connected.
     print("Logging in as admin under username: " + username)
     cursor = admin_conn.cursor()
-
- 
+    root = Tk()
+    root.title('Admin_Login')
+    root.geometry('600x300')
     
     def View():
-    
         def ViewCustomer():
             cursor.execute("select * from Customer")
+            
         def ViewOrder():
             cursor.execute("select * from Orders")
             print(list(admin_cursor))
@@ -42,14 +43,16 @@ def Start(admin_conn, username):
             cursor.execute("select * from Author_of_the_books")
             print(list(admin_cursor))
         
-    view1Button = Button(cForm, text="View Customers", command = ViewCustomer)
-    view2Button = Button(cForm, text="View Orders", command = ViewOrder)
-    view3Button = Button(cForm, text="View Books", command = ViewBooks)
-    view4Button = Button(cForm, text="View Suppliers", command = Supplier)
-    view1Button.grid(row=1, column=1)
-    view2Button.grid(row=2, column=1)
-    view3Button.grid(row=3, column=1)
-    view4Button.grid(row=4, column=1)
+        view1Button = Button(root, text="View Customers", command = ViewCustomer)
+        view2Button = Button(root, text="View Orders", command = ViewOrder)
+        view3Button = Button(root, text="View Books", command = ViewBooks)
+        view4Button = Button(root, text="View Suppliers", command = ViewSupplier)
+        view5Button = Button(root, text="View Authors", command = ViewAuthor)
+        view1Button.place(x=100, y=30)
+        view2Button.place(x=100, y=60)
+        view3Button.place(x=100, y=90)
+        view4Button.place(x=100, y=120)
+        view5Button.place(x=100, y=150)
     
 
     def Update():
@@ -66,10 +69,10 @@ def Start(admin_conn, username):
             print(list(admin_cursor))
 
     
-    update1Button = Button(cForm, text="Update Author Details", command = AuthorDetails)
-    update2Button = Button(cForm, text="Update Book Details", command = BookDetails)
-    update1Button.grid(row=5, column=1)
-    update2Button.grid(row=6, column=1)
+        update1Button = Button(root, text="Update Author Details", command = AuthorDetails)
+        update2Button = Button(root, text="Update Book Details", command = BookDetails)
+        update1Button.place(x=200, y=30)
+        update2Button.place(x=200, y=60)
     
 
     def Remove():
@@ -137,7 +140,14 @@ def Start(admin_conn, username):
 
 
    
-    removeButton = Button(cForm, text="Remove", command = Remove)
+        remove1Button = Button(root, text="Remove Customer", command = RemoveCustomer)
+        remove2Button = Button(root, text="Remove Author", command = RemoveAuthor)
+        remove3Button = Button(root, text="Remove Book", command = RemoveBook)
+        remove4Button = Button(root, text="Remove Supplier", command = RemoveSupplier)
+        remove1Button.place(x=350, y=30)
+        remove2Button.place(x=350, y=60)
+        remove3Button.place(x=350, y=90)
+        remove4Button.place(x=350, y=120)
     
     def disableButtons():
         viewButton['state'] = DISABLED
@@ -149,22 +159,9 @@ def Start(admin_conn, username):
         updateButton['state'] = ACTIVE
         removeButton['state'] = ACTIVE
 
-root = Tk()
-root.title('Admin_Login')
-root.geometry('600x300')
-
-username = Label(root, text="Username:")
-username.place(x=20, y=30)
-password = Label(root, text="Password:")
-password.place(x=20, y=60)
-
-
-usernameText = Entry()
-usernameText.place(x=150, y=30)
-passwordText = Entry()
-passwordText.place(x=150, y=60)
-passwordText['show'] = '*'
-
-loginButton = Button(root, text="Log in", command=Start)
-loginButton.place(x=150, y=90)
-
+    viewButton = Button(root, text="View", command = View)
+    viewButton.place(x=20, y=30)
+    updateButton = Button(root, text="Update", command = Update)
+    updateButton.place(x=20, y=60)
+    removeButton = Button(root, text="Delete", command = Remove)
+    removeButton.place(x=20, y=90)
