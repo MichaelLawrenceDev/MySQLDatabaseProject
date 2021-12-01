@@ -78,8 +78,9 @@ def Remove(admin_cursor, username):
    
 
 # Entry into Admin_Form.py
-def Start(admin_cursor, username):
+def Start(admin_conn, username):
     # cursor should already be connected.
+    admin_cursor = admin_conn.cursor()
     print("Logging in as admin under username: " + username)
     admin_cursor.execute("select * from Customer")
     print(list(admin_cursor))
