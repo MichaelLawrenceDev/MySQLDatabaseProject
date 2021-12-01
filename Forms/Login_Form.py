@@ -51,7 +51,7 @@ def main():
             except:
                 pass # This should only error as failing to login via pyodbc
         if (admin_login_success):
-            Admin_Form.Start(admin_conn.cursor(), username)
+            Admin_Form.Start(admin_conn, username)
             return True
         else:
             # try to log in as customer
@@ -65,7 +65,7 @@ def main():
                 # Password match
                 if close_form:
                     root.destroy() 
-                Customer_Form.Start(cursor, username)
+                Customer_Form.Start(conn, username)
                 return True
             else:
                 messagebox.showerror("Login Failure", "Password is invalid.")
@@ -120,7 +120,7 @@ def main():
                 cursor.execute(f"""
                     select max(ContactID) from Contact_Details
                 """)
-                ContactID = int(list(cursor)[0][0]) + 1
+                ContactID = int(cursor[0][0]) + 1
                 cursor.execute(f"""
                     insert into Contact_Details values ({ContactID})
                 """)
