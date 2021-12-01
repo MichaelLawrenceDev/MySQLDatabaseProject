@@ -111,7 +111,7 @@ def Start(admin_conn, username):
                 #ContactID = ContactIDText.get()
                 Username = UsernameText.get()
                 Password = PasswordText.get()
-                if(CustomerID=="" or First_Name=="" or Last_Name=="" or Username=="" ):
+                if(CustomerID=="" or Username=="" ):
                     MessageBox.showinfo('Update Status', 'All fields are required')
                 else:
                     cursor.execute("update Customer set First_Name='" + First_Name +"', Last_Name='" + Last_Name +"', Username='" + Username +"' where CustomerID='"+ CustomerID +"'")
