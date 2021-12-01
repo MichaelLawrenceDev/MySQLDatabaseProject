@@ -24,9 +24,10 @@ import sys
 
 
 # Entry into Customer_Form.py
-def Start(cursor, username):
+def Start(conn, username):
     # cursor should already be connected.
     print("Logging in under Customer's username: ", username)
+    cursor = conn.cursor()
 
     ### Customer Form ###
     cForm = Tk()
@@ -42,28 +43,37 @@ def Start(cursor, username):
             enableButtons()
             viewForm.destory()
 
+        def queryToText(query):
+            text = ""
+            for i in range(len(query)):
+                if i != len(query)-1:
+                    text += str(query[i][0]) + ", "
+                else:
+                    text += str(query[i][0])
+            return text
+
         # On exit, enable buttons
         viewForm.protocol("WM_DELETE_WINDOW", closeViewForm)
             
         # Customer Details
-        NameText = cursor.execute(f"""select First_Name, Last_Name from Customer where username = '{username}'""")
+        query = list(cursor.execute(f"""select First_Name, Last_Name from Customer where username = '{username}'"""))
+        NameText = f"{query[0][0]} {query[0][1]}"
         NameLabel = Label(viewForm, text="Full Name:")
-        Name = Label(viewForm, text=cursor.fetchone())
-        usernameText = cursor.execute(f"""select username from Customer where username = '{username}'""")
+        Name = Label(viewForm, text=NameText)
         usernameLabel = Label(viewForm, text="Username:")
-        User = Label(viewForm, text=cursor.fetchone())
+        User = Label(viewForm, text=username)
         passwordLabel = Label(viewForm, text="Password:")
         passwordText = cursor.execute(f"""select password from Customer where username = '{username}'""")
-        Pass = Label(viewForm, text=cursor.fetchone())
+        Pass = Label(viewForm, text="Can you remove displaying password from this form?")
         phoneLabel = Label(viewForm, text="Phone Number:")
-        phoneText = cursor.execute(f"""select Phone_Number from Customer, CNumber where username = '{username}' and CNumber.ContactID = Customer.ContactID""")
-        Phone = Label(viewForm, text=cursor.fetchall())
+        query = list(cursor.execute(f"""select Phone_Number from Customer, CNumber where username = '{username}' and CNumber.ContactID = Customer.ContactID"""))
+        Phone = Label(viewForm, text=queryToText(query))
         addressLabel = Label(viewForm, text="Address:")
-        addressText = cursor.execute(f"""select Address from Customer, CAddress where username = '{username}' and CAddress.ContactID = Customer.ContactID""")
-        Address = Label(viewForm, text=cursor.fetchall())
+        query = list(cursor.execute(f"""select Address from Customer, CAddress where username = '{username}' and CAddress.ContactID = Customer.ContactID"""))
+        Address = Label(viewForm, text=queryToText(query))
         emailLabel = Label(viewForm, text="Email:")
-        emailText = cursor.execute(f"""select Email from Customer, CMail where username = '{username}' and CMail.ContactID = Customer.ContactID""")
-        Email = Label(viewForm, text=cursor.fetchall())
+        query = list(cursor.execute(f"""select Email from Customer, CMail where username = '{username}' and CMail.ContactID = Customer.ContactID"""))
+        Email = Label(viewForm, text=queryToText(query))
         blankspace = Label(viewForm, text=" ")
         # Positioning
         NameLabel.grid(row=0, column=0)
@@ -103,17 +113,29 @@ def Start(cursor, username):
         PhoneText.grid(row=2, column=1)
 
         def addInfo():
-            reqInfo = [
-                    AddressText.get(),  # 0
-                    EmailText.get(),  # 1
-                    PhoneText.get()] # 2
-
+            address = AddressText.get()
+            email = EmailText.get()
+            phone = PhoneText.get()
             query_answer = cursor.execute(f"""select ContactID from Customer where Username = '{username}'""")
-            ContactID = int(list(query_answer)[0][0])
-            cursor.execute(f"insert into CAddress values ('{reqInfo[0]}',{ContactID}) where Customer.ContactID = CAddress.ContactID;")
-            cursor.execute(f"insert into CMail values ('{reqInfo[1]}',{ContactID}) where Customer.ContactID = CMail.ContactID;")
-            cursor.execute(f"insert into CNumber values ('{reqInfo[2]}',{ContactID}) where Customer.ContactID = CNumber.ContactID;")
+            contactID = int(list(query_answer)[0][0])
 
+            if address != "":
+                try:
+                    cursor.execute(f"insert into CAddress values ('{address}',{contactID})")
+                except:
+                    messagebox.showerror("Add Failure", f"Cannot add {address}, address is already registered to this or another account.")
+            if email != "":
+                try:
+                    cursor.execute(f"insert into CMail values ('{email}',{contactID})")
+                except: # Duplicate email exists
+                    messagebox.showerror("Add Failure", f"Cannot add {email}, email is already registered to this or another account.")
+            if phone != "":
+                try:
+                    cursor.execute(f"insert into CNumber values ('{phone}',{contactID})")
+                except:
+                    messagebox.showerror("Add Failure", f"Cannot add {phone}, phone Number is already registered to this or another account.")
+
+            conn.commit()
         
         add = Button(addForm, text="Add", command = addInfo)
         add.grid(row=4, column=1)
@@ -143,5 +165,3 @@ def Start(cursor, username):
         removeButton['state'] = ACTIVE
     
     mainloop()
-
-
