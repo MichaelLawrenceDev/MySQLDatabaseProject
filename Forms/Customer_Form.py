@@ -1,4 +1,10 @@
+from tkinter import *
+from tkinter import messagebox
+import Customer_Form
+import Admin_Form
 import pyodbc
+import bcrypt
+import sys
 
 # Customer Form - What it should accomplish
 #
@@ -15,48 +21,133 @@ import pyodbc
 #       - Can submit the order to the database when ready.
 #
 
+
+
 # Entry into Customer_Form.py
 def Start(cursor, username):
     # cursor should already be connected.
     print("Logging in under Customer's username: ", username)
 
-    # Select all emails from customer with username
-    cursor.execute(f"""
-        select Email from CMail, Customer where 
-        Customer.ContactID = CMail.ContactID and 
-        Customer.Username = '{username}'
-    """)
-    print("Emails: ", list(cursor))
+    ### Customer Form ###
+    cForm = Tk()
+    cForm.title("Customer Details")
+    
+    def viewDetails():
+        disableButtons()
+        viewForm = Toplevel(cForm)
+        viewForm.title("Account Holder Details")
 
-    # Select all addresses from customer with username
-    cursor.execute(f"""
-        select Address from CAddress, Customer where
-        Customer.ContactID = CAddress.ContactID and
-        Customer.Username = '{username}'
-    """)
-    print("Addresses: ", list(cursor))
+        
+        def closeViewForm():
+            enableButtons()
+            viewForm.destory()
 
-    # Select all phone numbers from customer with username
-    cursor.execute(f"""
-        select Phone_Number from CNumber, Customer where
-        Customer.ContactID = CNumber.ContactID and
-        Customer.Username = '{username}'
-    """)
-    print("Phone Numbers: ", list(cursor))
+        # On exit, enable buttons
+        viewForm.protocol("WM_DELETE_WINDOW", closeViewForm)
+            
+        # Customer Details
+        NameText = cursor.execute(f"""select First_Name, Last_Name from Customer where username = '{username}'""")
+        NameLabel = Label(viewForm, text="Full Name:")
+        Name = Label(viewForm, text=cursor.fetchone())
+        usernameText = cursor.execute(f"""select username from Customer where username = '{username}'""")
+        usernameLabel = Label(viewForm, text="Username:")
+        User = Label(viewForm, text=cursor.fetchone())
+        passwordLabel = Label(viewForm, text="Password:")
+        passwordText = cursor.execute(f"""select password from Customer where username = '{username}'""")
+        Pass = Label(viewForm, text=cursor.fetchone())
+        phoneLabel = Label(viewForm, text="Phone Number:")
+        phoneText = cursor.execute(f"""select Phone_Number from Customer, CNumber where username = '{username}' and CNumber.ContactID = Customer.ContactID""")
+        Phone = Label(viewForm, text=cursor.fetchall())
+        addressLabel = Label(viewForm, text="Address:")
+        addressText = cursor.execute(f"""select Address from Customer, CAddress where username = '{username}' and CAddress.ContactID = Customer.ContactID""")
+        Address = Label(viewForm, text=cursor.fetchall())
+        emailLabel = Label(viewForm, text="Email:")
+        emailText = cursor.execute(f"""select Email from Customer, CMail where username = '{username}' and CMail.ContactID = Customer.ContactID""")
+        Email = Label(viewForm, text=cursor.fetchall())
+        blankspace = Label(viewForm, text=" ")
+        # Positioning
+        NameLabel.grid(row=0, column=0)
+        Name.grid(row=0, column=1)
+        usernameLabel.grid(row=1, column=0)
+        User.grid(row=1, column=1)
+        passwordLabel.grid(row=2, column=0)
+        Pass.grid(row=2, column=1)
+        phoneLabel.grid(row=3, column=0)
+        Phone.grid(row=3, column=1)
+        addressLabel.grid(row=4, column=0)
+        Address.grid(row=4, column=1)
+        emailLabel.grid(row=5, column=0)
+        Email.grid(row=5, column=1)
+        blankspace.grid(row=8, column=0)
+        
 
-    # To add contact details to a customer
-    #   1. get contactID of customer
-    #   2. insert all emails with contactID
-    #   3. insert all phone numbers
-    #   4. insert all addresses
-    #
-    # To change details, use MySQL Update query
+    def addDetails():
+        addForm = Toplevel(cForm)
+        addForm.title("Add Details")
+        
+        def closeAddForm():
+            enableButtons()
+            addForm.destroy()
+
+        AddressLabel = Label(addForm, text="Address:")
+        AddressText = Entry(addForm, width=25)
+        EmailLabel = Label(addForm, text="Email:")
+        EmailText = Entry(addForm, width=25)
+        PhoneLabel = Label(addForm, text="Phone:")
+        PhoneText = Entry(addForm, width=25)
+        AddressLabel.grid(row=0, column=0)
+        AddressText.grid(row=0, column=1)
+        EmailLabel.grid(row=1, column=0)
+        EmailText.grid(row=1, column=1)
+        PhoneLabel.grid(row=2, column=0)
+        PhoneText.grid(row=2, column=1)
+
+        def addInfo():
+            reqInfo = [
+                    AddressText.get(),  # 0
+                    EmailText.get(),  # 1
+                    PhoneText.get()] # 2
+
+            query_answer = cursor.execute(f"""select ContactID from Customer where Username = '{username}'""")
+            ContactID = int(list(query_answer)[0][0])
+            cursor.execute(f"insert into CAddress values ('{reqInfo[0]}',{ContactID}) where Customer.ContactID = CAddress.ContactID;")
+            cursor.execute(f"insert into CMail values ('{reqInfo[1]}',{ContactID}) where Customer.ContactID = CMail.ContactID;")
+            cursor.execute(f"insert into CNumber values ('{reqInfo[2]}',{ContactID}) where Customer.ContactID = CNumber.ContactID;")
+
+        
+        add = Button(addForm, text="Add", command = addInfo)
+        add.grid(row=4, column=1)
+
+    def removeDetails():
+        
+        def closeRemoveForm():
+            enableButtons()
+            removeForm.destroy()
+
+    
+    viewButton = Button(cForm, text="View", command = viewDetails)
+    addButton = Button(cForm, text="Add", command = addDetails)
+    removeButton = Button(cForm, text="Remove", command = removeDetails)
+    viewButton.grid(row=1, column=1)
+    addButton.grid(row=2, column=1)
+    removeButton.grid(row=3, column=1)
+    
+    def disableButtons():
+        viewButton['state'] = DISABLED
+        addButton['state'] = DISABLED
+        removeButton['state'] = DISABLED
+
+    def enableButtons():
+        viewButton['state'] = ACTIVE
+        addButton['state'] = ACTIVE
+        removeButton['state'] = ACTIVE
+    
+
+    # print books
+    cursor.execute("select * from Customer")
+    books = cursor.fetchall()
+    print(books)
+    
+    mainloop()
 
 
-    # How to get ContactID
-    query_answer = cursor.execute(f"""
-        select ContactID from Customer where
-        Username = '{username}'
-    """)
-    contactID = int(list(query_answer)[0][0])
-    print(f"ContactID: {contactID}")
