@@ -21,6 +21,10 @@ def Start(admin_conn, username):
     print("Logging in as admin under username: " + username)
     cursor = admin_conn.cursor()
 
+    root = Tk()
+    root.title('Admin_Login')
+    root.geometry('600x300')
+
  
     
     def View():
@@ -137,6 +141,10 @@ def Start(admin_conn, username):
             y_Supplier_Name.Remove(0, 'end')
 
 
+    
+        
+
+  
    
     removeButton = Button(cForm, text="Remove", command = Remove)
     
@@ -149,23 +157,3 @@ def Start(admin_conn, username):
         viewButton['state'] = ACTIVE
         updateButton['state'] = ACTIVE
         removeButton['state'] = ACTIVE
-
-root = Tk()
-root.title('Admin_Login')
-root.geometry('600x300')
-
-username = Label(root, text="Username:")
-username.place(x=20, y=30)
-password = Label(root, text="Password:")
-password.place(x=20, y=60)
-
-
-usernameText = Entry()
-usernameText.place(x=150, y=30)
-passwordText = Entry()
-passwordText.place(x=150, y=60)
-passwordText['show'] = '*'
-
-loginButton = Button(root, text="Log in", command=Start)
-loginButton.place(x=150, y=90)
-
