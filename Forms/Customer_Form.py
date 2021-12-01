@@ -143,7 +143,7 @@ def Start(cursor, username):
         removeButton['state'] = ACTIVE
     
 
-    # print books
+    # print books -- NOT DONE
     cursor.execute("select * from Customer")
     books = cursor.fetchall()
     print(books)
