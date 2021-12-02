@@ -5,6 +5,7 @@ import Customer_Form
 import Admin_Form
 import pyodbc
 import bcrypt
+from tkinter.messagebox import showinfo
 import sys
 
 # Customer Form - What it should accomplish
@@ -252,7 +253,7 @@ def Start(conn, username):
         
         #print books
         bookTitle = cursor.execute(f"""select Title from Books order by Title""")
-        b = Listbox(booksForm, selectmode = "multiple", exportselection=0, width = 35)
+        b = Listbox(booksForm, selectmode = "multiple", width = 35)
         Scrollbar(b, orient="vertical")
         booksForm.geometry("400x300")
         
@@ -264,10 +265,11 @@ def Start(conn, username):
         
         #Add book to order
         def getBook():
-            def getBook():
-            selected = b.curselection()
-            sList = ",".join([b.get(i) for i in selected])
+            a = b.curselection()[0]
+            label['text'] = b.get(a)
+            item = label.cget("text")
         b.bind('<<ListboxSelect>>', lambda x: getBook())
+        label = Label(booksForm)
         OrderButton = Button(booksForm, text="Add to Order", command = lambda: submitOrder(["19740637", "28450378"]))
         OrderButton.grid(row=5, column=1)
 
@@ -279,7 +281,7 @@ def Start(conn, username):
             # get customerID
             query_answer = cursor.execute(f"select CustomerID from Customer where Username = '{username}'")
             customerID = int(list(query_answer)[0][0])
-            orderTime = dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            orderTime = dt.datetime.now().strftime('%Y-%m-%d')
             OrderID = 0
 
             # get OrderID
