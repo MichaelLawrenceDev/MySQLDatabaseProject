@@ -146,7 +146,7 @@ def Start(conn, username):
         booksForm = Toplevel(cForm)
         booksForm.title("Browse Books")
 
-        def search(): #DOESN'T WORK YET
+        def search():
             key = SearchText.get()
             bookTitle = cursor.execute(f"""select Title from Books where Title like '%{key}%' order by Title""")
             s = Listbox(booksForm, width = 35)
