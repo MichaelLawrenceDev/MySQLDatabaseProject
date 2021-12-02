@@ -264,12 +264,10 @@ def Start(conn, username):
         
         #Add book to order
         def getBook():
-            a = b.curselection()
-            for i in a:
-                label['text'] = b.get(i)
-                item = label.cget("text")
+            def getBook():
+            selected = b.curselection()
+            sList = ",".join([b.get(i) for i in selected])
         b.bind('<<ListboxSelect>>', lambda x: getBook())
-        label = Label(booksForm)
         OrderButton = Button(booksForm, text="Add to Order", command = lambda: submitOrder(["19740637", "28450378"]))
         OrderButton.grid(row=5, column=1)
 
