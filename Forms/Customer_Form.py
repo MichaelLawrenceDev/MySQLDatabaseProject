@@ -1,10 +1,10 @@
 from tkinter import *
 from tkinter import messagebox
+import datetime as dt
 import Customer_Form
 import Admin_Form
 import pyodbc
 import bcrypt
-import datetime as dt
 import sys
 
 # Customer Form - What it should accomplish
@@ -282,14 +282,15 @@ def Start(conn, username):
             except:
                 Order_Value = 0
             #today
-            date = Label(orderForm, text=f"{dt.datetime.now():%a, %b %d %Y}", font=("helvetica", 40))
+            dateTime = f"{dt.datetime.now():%a, %b %d %Y}"
+            date = Label(orderForm, text=dateTime, font=("helvetica", 40))
 
             #cursor.execute(f"insert into Orders values ({OrderID},{date},{Order_Value},{customerID})")
             #cursor.execute(f"insert into Order_Items values ({Item_Number},{Item_Price},{ISBN},{OrderID})")
 
             #Order Details
             OrderLabel = Label(orderForm, text="Order: # " + str(OrderID))
-            DateLabel = Label(orderForm, text="Date: " + date)
+            DateLabel = Label(orderForm, text="Date: " + str(dateTime))
             ValueLabel = Label(orderForm, text="Price: $ " + str(Order_Value))
             OrderLabel.grid(row=1, column=1)
             DateLabel.grid(row=3, column=1)
