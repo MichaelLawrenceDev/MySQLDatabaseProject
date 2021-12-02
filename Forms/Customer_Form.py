@@ -145,8 +145,8 @@ def Start(conn, username):
             """))
             updateHelper(query, 4, 2)
 
+        # type [0=email, 1=phone, 2=address]
         def removeDetail(x, type):
-            # type [0=email, 1=phone, 2=address]
             query = []
             try:
                 if (type == 0):
@@ -159,34 +159,40 @@ def Start(conn, username):
                     print(f"delete from CAddress where Address = '{x}'")
                     query = list(cursor.execute(f"delete from CAddress where Address = '{x}'"))
             except Exception as e:
-                print(e)
+                # For some reason, it deletes then complains that this wasn't a proper query
+                #print(e)
+                pass
 
             
             cursor.execute('commit')
             updateDetails()
 
-        def addDetails():
-            address = addressEntry.get()
-            email = emailEntry.get()
-            phone = phoneEntry.get()
+        # type [0=email, 1=phone, 2=address]
+        def addDetails(type):
+
+            # get contactID
             query_answer = cursor.execute(f"""select ContactID from Customer where Username = '{username}'""")
             contactID = int(list(query_answer)[0][0])
 
-            if address != "":
+            # change email/phone/address depending on type
+            if type == 0 and emailEntry.get() != "":
                 try:
-                    cursor.execute(f"insert into CAddress values ('{address}',{contactID})")
-                except:
-                    messagebox.showerror("Add Failure", f"Cannot add {address}, address is already registered to this or another account.")
-            if email != "":
-                try:
-                    cursor.execute(f"insert into CMail values ('{email}',{contactID})")
+                    cursor.execute(f"insert into CMail values ('{emailEntry.get()}',{contactID})")
+                    emailEntry.delete(0, 'end')
                 except: # Duplicate email exists
-                    messagebox.showerror("Add Failure", f"Cannot add {email}, email is already registered to this or another account.")
-            if phone != "":
+                    messagebox.showerror("Add Failure", f"Cannot add {emailEntry.get()}, email is already registered to this or another account.")
+            elif type == 1 and phoneEntry.get() != "":
                 try:
-                    cursor.execute(f"insert into CNumber values ('{phone}',{contactID})")
+                    cursor.execute(f"insert into CNumber values ('{phoneEntry.get()}',{contactID})")
+                    phoneEntry.delete(0, 'end')
                 except:
-                    messagebox.showerror("Add Failure", f"Cannot add {phone}, phone Number is not a valid number or it already exists in database.")
+                    messagebox.showerror("Add Failure", f"Cannot add {phoneEntry.get()}, phone Number is not a valid number or it already exists in database.")
+            elif type == 2 and addressEntry.get() != "":
+                try:
+                    cursor.execute(f"insert into CAddress values ('{addressEntry.get()}',{contactID})")
+                    addressEntry.delete(0, 'end')
+                except:
+                    messagebox.showerror("Add Failure", f"Cannot add {addressEntry.get()}, address is already registered to this or another account.")
 
             conn.commit()
             updateDetails()
@@ -214,9 +220,9 @@ def Start(conn, username):
         phoneEntry.grid(row=2, column=2)
         addressEntry.grid(row=2, column=4)
         
-        addEmailButton = Button(cdForm, text="+", command = addDetails)
-        addPhoneButton = Button(cdForm, text="+", command = addDetails)
-        addAddressButton = Button(cdForm, text="+", command = addDetails)
+        addEmailButton = Button(cdForm, text="+", command = lambda:addDetails(0))
+        addPhoneButton = Button(cdForm, text="+", command = lambda:addDetails(1))
+        addAddressButton = Button(cdForm, text="+", command = lambda:addDetails(2))
 
         addEmailButton.grid(row=2, column=1)
         addPhoneButton.grid(row=2, column=3)
