@@ -86,7 +86,7 @@ def Start(admin_conn, username):
             if (CustomerIDText.get() ==""):
                 MessageBox.showinfo('Delete Status', 'CustomerID is compulsory for delete')
             else:
-                cursor.execute("delete *from Customer where CustomerID=='"+ CustomerIDText.get() +"'")
+                cursor.execute("delete from Customer where CustomerID=='"+ CustomerIDText.get() +"'")
                 cursor.execute('commit')
 
             CustomerIDText.Remove(0, 'end')
@@ -158,7 +158,7 @@ def Start(admin_conn, username):
             if (ISBNText.get() == ""):
                 MessageBox.showinfo('Delete Status', 'ISBN is compulsory for delete')
             else:
-                cursor.execute("delete * from Books where ISBN=='"+ ISBNText.get() +"'")
+                cursor.execute("delete from Books where ISBN=='"+ ISBNText.get() +"'")
                 cursor.execute('commit')
         
             ISBNText.Remove(0, 'end')
@@ -196,7 +196,7 @@ def Start(admin_conn, username):
             if (SupplierIDText.get() == ""):
                 MessageBox.showinfo('Delete Status', 'SupplierID is compulsory for delete')
             else:
-                cursor.execute("delete * from Supplier where SupplierID=='"+ SupplierIDText.get() +"'")
+                cursor.execute("delete from Supplier where SupplierID=='"+ SupplierIDText.get() +"'")
                 cursor.execute('commit')
         
             SupplierIDText.Remove(0, 'end')
@@ -261,7 +261,7 @@ def Start(admin_conn, username):
             if (AuthorIDText.get() == ""):
                 MessageBox.showinfo('Delete Status', 'AuthorID is compulsory for delete')
             else:
-                cursor.execute("delete * from Author_of_the_books where AuthorID=='"+ AuthorIDText.get() +"'")
+                cursor.execute("delete from Author_of_the_books where AuthorID=='"+ AuthorIDText.get() +"'")
                 cursor.execute('commit')
         
             AuthorIDText.Remove(0, 'end')
