@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
-import pyobc
+import pyodbc
 # Admin Form - What it should accomplish
 #
 #   1. View all customers
@@ -14,7 +14,6 @@ import pyobc
 #   8. Update Book Details   
 #   9. Remove customer/author/book/supplier from database
 
-    
 # Entry into Admin_Form.py and view all customer
 def Start(admin_conn, username):
      #cursor should already be connected.
@@ -71,12 +70,22 @@ def Start(admin_conn, username):
         view5Form.geometry("600x300")
         cursor.execute("select * from Author_of_the_books")
         print(list(cursor.execute))
+    
     list = Listbox(root)
     list.place(x=150, y=20)
-        
-   
+    
+    # type indicates customer/books/ext...
+    def updateRecords(table):
+        list.delete(0, 'end')
+        records = cursor.execute(f"select * from {table}").fetchall()
 
-
+        # add records
+        for row in records:
+            insertData = ''
+            for value in row:
+                insertData += str(value) + '   '
+            list.insert(list.size()+1, insertData)
+            
 
     def disableButtons():
         viewButton['state'] = DISABLED
@@ -112,23 +121,23 @@ def Start(admin_conn, username):
     v5 = Button(root, text="Edit", command = Authors)
     v5.place(x=500, y=140)
 
-    list = Listbox(root)
+    list = Listbox(root, width=50)
     list.place(x=150, y=20)
     show()
 
-    r1 = Button(root, text="Customer", command = Customer)
+    r1 = Button(root, text="Customer", command = lambda:updateRecords("Customer"))
     r1.place(x=20, y=20)
 
-    r2 = Button(root, text="Orders", command = Orders)
+    r2 = Button(root, text="Orders", command = lambda:updateRecords("Orders"))
     r2.place(x=20, y=50)
 
-    r3 = Button(root, text="Books", command = Books)
+    r3 = Button(root, text="Books", command = lambda:updateRecords("Books"))
     r3.place(x=20, y=80)
 
-    r4 = Button(root, text="Suppliers", command = Suppliers)
+    r4 = Button(root, text="Suppliers", command = lambda:updateRecords("Supplier"))
     r4.place(x=20, y=110)
 
-    r5 = Button(root, text="Authors", command = Authors)
+    r5 = Button(root, text="Authors", command = lambda:updateRecords("Author_of_the_books"))
     r5.place(x=20, y=140)
 
     r6 = Button(root, text="Custom Query", command = CustomQuery)
