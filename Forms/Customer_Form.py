@@ -34,14 +34,9 @@ def Start(conn, username):
     cForm.title("Customer Details")
     
     def viewDetails():
-        disableButtons()
         viewForm = Toplevel(cForm)
         viewForm.title("Account Holder Details")
 
-        
-        def closeViewForm():
-            enableButtons()
-            viewForm.destory()
 
         def queryToText(query):
             text = ""
@@ -52,8 +47,6 @@ def Start(conn, username):
                     text += str(query[i][0])
             return text
 
-        # On exit, enable buttons
-        viewForm.protocol("WM_DELETE_WINDOW", closeViewForm)
             
         # Customer Details
         query = list(cursor.execute(f"""select First_Name, Last_Name from Customer where username = '{username}'"""))
@@ -64,7 +57,7 @@ def Start(conn, username):
         User = Label(viewForm, text=username)
         passwordLabel = Label(viewForm, text="Password:")
         passwordText = cursor.execute(f"""select password from Customer where username = '{username}'""")
-        Pass = Label(viewForm, text="Can you remove displaying password from this form?")
+        Pass = Label(viewForm, text="*************")
         phoneLabel = Label(viewForm, text="Phone Number:")
         query = list(cursor.execute(f"""select Phone_Number from Customer, CNumber where username = '{username}' and CNumber.ContactID = Customer.ContactID"""))
         Phone = Label(viewForm, text=queryToText(query))
@@ -89,7 +82,7 @@ def Start(conn, username):
         emailLabel.grid(row=5, column=0)
         Email.grid(row=5, column=1)
         blankspace.grid(row=8, column=0)
-
+        
 
     def contactDetailEditor():
 
@@ -229,18 +222,16 @@ def Start(conn, username):
         addAddressButton.grid(row=2, column=5)
 
         updateDetails()
-    
+
+
+#Books
     def viewBooks():
-        disableButtons()
         booksForm = Toplevel(cForm)
         booksForm.title("Browse Books")
         
-        def closeBrowseForm():
-            enableButtons()
-            booksForm.destroy()
 
-        def search():
-            key = SearchText.get()  # <-- Just moved key here and added {} inside query
+        def search(): 
+            key = SearchText.get()
             bookTitle = cursor.execute(f"""select Title from Books where Title like '%{key}%' order by Title""")
             s = Listbox(booksForm, width = 35)
             Scrollbar(s, orient="vertical")
@@ -269,20 +260,10 @@ def Start(conn, username):
         b.grid(column=1, row=1, sticky='NS')
         
     viewButton = Button(cForm, text="View Account", command = viewDetails)
-    removeButton = Button(cForm, text="Change Contact Details", command = contactDetailEditor)
+    changeButton = Button(cForm, text="Change Contact Details", command = contactDetailEditor)
     viewButton.grid(row=1, column=1)
-    removeButton.grid(row=2, column=1)
+    changeButton.grid(row=2, column=1)
     browse = Button(cForm, text="Browse Books", command = viewBooks)
     browse.grid(row=4, column=1)
-    
-    def disableButtons():
-        viewButton['state'] = DISABLED
-        addButton['state'] = DISABLED
-        removeButton['state'] = DISABLED
-
-    def enableButtons():
-        viewButton['state'] = ACTIVE
-        addButton['state'] = ACTIVE
-        removeButton['state'] = ACTIVE
     
     mainloop()
