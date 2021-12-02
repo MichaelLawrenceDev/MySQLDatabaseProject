@@ -308,17 +308,10 @@ def Start(conn, username):
                     cursor.execute(f"insert into Order_Items values ({itemNum}, {bookPrice}, {ISBN}, {OrderID});")
             except Exception as e:
                 print("Invalid ISBN Passed in: " + str(e))
-
             # Finally, update order to include totalPrice
             cursor.execute(f"update Orders set Order_Value = {Order_Value} where OrderID = {OrderID}")
             conn.commit()
 
-            #get Order_Value
-            query_answer = cursor.execute(f"""select Order_Value from Orders where CustomerID = '{customerID}'""")
-            try:
-                Order_Value = int(list(query_answer)[0][0])
-            except:
-                Order_Value = 0
             date = Label(orderForm, text=orderTime, font=("helvetica", 40))
 
             #Order Details
@@ -332,11 +325,11 @@ def Start(conn, username):
             #List of selected books
             bList = list(cursor.execute(f"""
                 select Books.Title from Books, Orders, Order_Items
-                where Orders.OrderIF = Order_Items.OrderID and
-                Books.ISBN = Order_Items.OrderID and
+                where Orders.OrderID = Order_Items.OrderID and
+                Books.ISBN = Order_Items.ISBN and
                 Orders.OrderID = {OrderID}
             """))
-            ListLabel = Label(orderForm, text=bList)
+            ListLabel = Label(orderForm, text=str(bList))
             ListLabel.grid(row=4, column=1)
         
     viewButton = Button(cForm, text="View Account", command = viewDetails)
