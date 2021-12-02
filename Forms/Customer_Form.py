@@ -105,7 +105,7 @@ def Start(conn, username):
             for i in range(len(query)):
                 val = str(query[i][0]) # get hard copy string
                 label = Label(cdForm, text=val)
-                btn = Button(cdForm, text="-", command = lambda: removeDetail(val, type))
+                btn = Button(cdForm, text="-", command = lambda val = val: removeDetail(val, type))
                 label.grid(row=3+i, column=col_num)
                 btn.grid(row=3+i, column=col_num+1)
 
