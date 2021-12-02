@@ -330,7 +330,12 @@ def Start(conn, username):
             ValueLabel.grid(row=5, column=1)
 
             #List of selected books
-            bList = list(cursor.execute(f"""select Title from Books where Title like '{item}' order by Title"""))
+            bList = list(cursor.execute(f"""
+                select Books.Title from Books, Orders, Order_Items
+                where Orders.OrderIF = Order_Items.OrderID and
+                Books.ISBN = Order_Items.OrderID and
+                Orders.OrderID = {OrderID}
+            """))
             ListLabel = Label(orderForm, text=bList)
             ListLabel.grid(row=4, column=1)
         
