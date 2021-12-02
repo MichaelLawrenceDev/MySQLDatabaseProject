@@ -274,7 +274,8 @@ def Start(conn, username):
                 OrderID = int(list(cursor.execute("select max(OrderID) from Orders;"))[0][0]) + 1
             except:
                 OrderID = 0            
-            query_answer = cursor.execute(f"""select OrderID from Orders where CustomerID = '{customerID}'""")
+            #query_answer = cursor.execute(f"""select OrderID from Orders where CustomerID = '{customerID}'""")
+
             #get Order_Value
             query_answer = cursor.execute(f"""select Order_Value from Orders where CustomerID = '{customerID}'""")
             try:
@@ -289,6 +290,8 @@ def Start(conn, username):
             #cursor.execute(f"insert into Order_Items values ({Item_Number},{Item_Price},{ISBN},{OrderID})")
 
             #Order Details
+
+
             OrderLabel = Label(orderForm, text="Order: # " + str(OrderID))
             DateLabel = Label(orderForm, text="Date: " + str(dateTime))
             ValueLabel = Label(orderForm, text="Price: $ " + str(Order_Value))
@@ -304,6 +307,77 @@ def Start(conn, username):
         b.bind('<<ListboxSelect>>', lambda x: getBook())
         label = Label(booksForm)
         OrderButton = Button(booksForm, text="Add to Order", command = order)
+        OrderButton.grid(row=5, column=1)
+
+        def submitOrder(listISBNs):
+            orderForm = Toplevel(cForm)
+            orderForm.title("Order Details")
+            item = label.cget("text")
+
+            # get customerID
+            query_answer = cursor.execute(f"select CustomerID from Customer where Username = '{username}'")
+            customerID = int(list(query_answer)[0][0])
+            orderTime = dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            OrderID = 0
+
+            # get OrderID
+            try:
+                OrderID = int(list(cursor.execute("select max(OrderID) from Orders;"))[0][0]) + 1
+            except:
+                OrderID = 0 # If query returns nothing, then start with id = 0   
+
+            # Submit it to server
+            # Insert into Orders table...
+            cursor.execute(f"insert into Orders values ({OrderID}, '{orderTime}', NULL, {customerID})")
+
+            # Insert into Order_Items Table...
+            Order_Value = 0
+            try:
+                for ISBN in listISBNs:
+                    itemNum = 0
+                    try:
+                        itemNum = int(list(cursor.execute("select max(Item_Number) from Order_Items;"))[0][0]) + 1
+                    except:
+                        itemNum = 0 # If query returns nothing, then start with id = 0
+                    bookPrice = list(cursor.execute(f"select Price from Books where ISBN = {ISBN};"))[0][0]
+                    Order_Value += bookPrice
+                    cursor.execute(f"insert into Order_Items values ({itemNum}, {bookPrice}, {ISBN}, {OrderID});")
+            except Exception as e:
+                print("Invalid ISBN Passed in: " + str(e))
+
+            # Finally, update order to include totalPrice
+            cursor.execute(f"update Orders set Order_Value = {Order_Value} where OrderID = {OrderID}")
+            conn.commit()
+
+            #get Order_Value
+            query_answer = cursor.execute(f"""select Order_Value from Orders where CustomerID = '{customerID}'""")
+            try:
+                Order_Value = int(list(query_answer)[0][0])
+            except:
+                Order_Value = 0
+            date = Label(orderForm, text=orderTime, font=("helvetica", 40))
+
+            #cursor.execute(f"insert into Orders values ({OrderID},{date},{Order_Value},{customerID})")
+            #cursor.execute(f"insert into Order_Items values ({Item_Number},{Item_Price},{ISBN},{OrderID})")
+
+            #Order Details
+
+
+            OrderLabel = Label(orderForm, text="Order: # " + str(OrderID))
+            DateLabel = Label(orderForm, text="Date: " + orderTime)
+            ValueLabel = Label(orderForm, text="Price: $ " + str(Order_Value))
+            OrderLabel.grid(row=1, column=1)
+            DateLabel.grid(row=3, column=1)
+            ValueLabel.grid(row=5, column=1)
+
+        #Add book to order
+        def getBook():
+            a = b.curselection()[0]
+            label['text'] = b.get(a)
+            item = label.cget("text")
+        b.bind('<<ListboxSelect>>', lambda x: getBook())
+        label = Label(booksForm)
+        OrderButton = Button(booksForm, text="Add to Order", command = lambda: submitOrder(["19740637", "28450378"]))
         OrderButton.grid(row=5, column=1)
         
         
