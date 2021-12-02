@@ -147,7 +147,8 @@ def Start(conn, username):
         booksForm.title("Browse Books")
 
         def search(): #DOESN'T WORK YET
-            bookTitle = cursor.execute(f"""select Title from Books where Title like '%key%' order by Title""")
+            key = SearchText.get()
+            bookTitle = cursor.execute(f"""select Title from Books where Title like '%{key}%' order by Title""")
             s = Listbox(booksForm, width = 35)
             Scrollbar(s, orient="vertical")
             
@@ -158,7 +159,6 @@ def Start(conn, username):
             
         SearchLabel = Label(booksForm, text="Search keyword:")
         SearchText = Entry(booksForm, width=35)
-        key = SearchText.get()
         SearchButton = Button(booksForm, text="Search", command = search)
         SearchLabel.grid(row=0, column=0)
         SearchText.grid(row=0, column=1)
