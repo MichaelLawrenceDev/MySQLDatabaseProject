@@ -65,12 +65,37 @@ def Start(admin_conn, username):
         print(list(cursor.execute))
     
     def CustomQuery():
+
+        def submitQuery():
+            query = []
+            try:
+                query = cursor.execute(textbox.get("1.0", END)).fetchall()
+            except Exception as e:
+                messagebox.showerror("Query Error", e)
+            
+            resultbox.configure(state='normal')
+            resultbox.delete('1.0', END)
+            print(query)
+            for row in query:
+                resultbox.insert(END, str(row) + "\n")
+            resultbox.configure(state='disabled')
+            admin_conn.commit()
+
+        # Custom Query Form
         view5Form = Toplevel(root)
         view5Form.title("Query")
-        view5Form.geometry("600x300")
-        cursor.execute("select * from Author_of_the_books")
-        print(list(cursor.execute))
-    
+
+        textbox = Text(view5Form, height=15, width=100)
+        resultbox = Text(view5Form, height=15, width=100)
+        resultbox.configure(state='disabled')
+        textbox.grid(row=0, column=0)
+        resultbox.grid(row=4, column=0)
+
+        submitButton = Button(view5Form, text="Execute", command=submitQuery)
+        submitButton.grid(row=1, column=0)
+
+        
+
     list = Listbox(root)
     list.place(x=150, y=20)
     
