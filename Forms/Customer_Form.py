@@ -252,7 +252,7 @@ def Start(conn, username):
         
         #print books
         bookTitle = cursor.execute(f"""select Title from Books order by Title""")
-        b = Listbox(booksForm, width = 35)
+        b = Listbox(booksForm, selectmode = "multiple", exportselection=0, width = 35)
         Scrollbar(b, orient="vertical")
         booksForm.geometry("400x300")
         
@@ -260,53 +260,17 @@ def Start(conn, username):
             b.insert(END, *x)
 
         b.grid(column=1, row=1, sticky='NS')
+
         
-        def order():
-            orderForm = Toplevel(cForm)
-            orderForm.title("Order Details")
-            item = label.cget("text")
-            # get customerID
-            query_answer = cursor.execute(f"""select CustomerID from Customer where Username = '{username}'""")
-            customerID = int(list(query_answer)[0][0])
-            # get OrderID
-            try:
-                # If query returns nothing, then start with id = 0
-                OrderID = int(list(cursor.execute("select max(OrderID) from Orders;"))[0][0]) + 1
-            except:
-                OrderID = 0            
-            #query_answer = cursor.execute(f"""select OrderID from Orders where CustomerID = '{customerID}'""")
-
-            #get Order_Value
-            query_answer = cursor.execute(f"""select Order_Value from Orders where CustomerID = '{customerID}'""")
-            try:
-                Order_Value = int(list(query_answer)[0][0])
-            except:
-                Order_Value = 0
-            #today
-            dateTime = f"{dt.datetime.now():%a, %b %d %Y}"
-            date = Label(orderForm, text=dateTime, font=("helvetica", 40))
-
-            #cursor.execute(f"insert into Orders values ({OrderID},{date},{Order_Value},{customerID})")
-            #cursor.execute(f"insert into Order_Items values ({Item_Number},{Item_Price},{ISBN},{OrderID})")
-
-            #Order Details
-
-
-            OrderLabel = Label(orderForm, text="Order: # " + str(OrderID))
-            DateLabel = Label(orderForm, text="Date: " + str(dateTime))
-            ValueLabel = Label(orderForm, text="Price: $ " + str(Order_Value))
-            OrderLabel.grid(row=1, column=1)
-            DateLabel.grid(row=3, column=1)
-            ValueLabel.grid(row=5, column=1)
-
         #Add book to order
         def getBook():
-            a = b.curselection()[0]
-            label['text'] = b.get(a)
-            item = label.cget("text")
+            a = b.curselection()
+            for i in a:
+                label['text'] = b.get(i)
+                item = label.cget("text")
         b.bind('<<ListboxSelect>>', lambda x: getBook())
         label = Label(booksForm)
-        OrderButton = Button(booksForm, text="Add to Order", command = order)
+        OrderButton = Button(booksForm, text="Add to Order", command = lambda: submitOrder(["19740637", "28450378"]))
         OrderButton.grid(row=5, column=1)
 
         def submitOrder(listISBNs):
@@ -357,12 +321,7 @@ def Start(conn, username):
                 Order_Value = 0
             date = Label(orderForm, text=orderTime, font=("helvetica", 40))
 
-            #cursor.execute(f"insert into Orders values ({OrderID},{date},{Order_Value},{customerID})")
-            #cursor.execute(f"insert into Order_Items values ({Item_Number},{Item_Price},{ISBN},{OrderID})")
-
             #Order Details
-
-
             OrderLabel = Label(orderForm, text="Order: # " + str(OrderID))
             DateLabel = Label(orderForm, text="Date: " + orderTime)
             ValueLabel = Label(orderForm, text="Price: $ " + str(Order_Value))
@@ -370,16 +329,10 @@ def Start(conn, username):
             DateLabel.grid(row=3, column=1)
             ValueLabel.grid(row=5, column=1)
 
-        #Add book to order
-        def getBook():
-            a = b.curselection()[0]
-            label['text'] = b.get(a)
-            item = label.cget("text")
-        b.bind('<<ListboxSelect>>', lambda x: getBook())
-        label = Label(booksForm)
-        OrderButton = Button(booksForm, text="Add to Order", command = lambda: submitOrder(["19740637", "28450378"]))
-        OrderButton.grid(row=5, column=1)
-        
+            #List of selected books
+            bList = list(cursor.execute(f"""select Title from Books where Title like '{item}' order by Title"""))
+            ListLabel = Label(orderForm, text=bList)
+            ListLabel.grid(row=4, column=1)
         
     viewButton = Button(cForm, text="View Account", command = viewDetails)
     changeButton = Button(cForm, text="Change Contact Details", command = contactDetailEditor)
