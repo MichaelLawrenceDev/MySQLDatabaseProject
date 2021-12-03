@@ -259,7 +259,7 @@ def Start(conn, username):
         b.grid(column=1, row=1, sticky='NS')
 
         label = Label(booksForm)
-        OrderButton = Button(booksForm, text="Order Selected Book", 
+        OrderButton = Button(booksForm, text="Add to Order", 
             command = lambda: submitOrder(getTitles(b)))
         OrderButton.grid(row=5, column=1)
 
