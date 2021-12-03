@@ -13,7 +13,7 @@ import sys
 # You can also run 'python3 customer_form.py <username> <password>' to log in faster
 
 ### TODO: Username comparison query is not case sensitive (ie: user2 = UseR2),
-###       need to make it case sensitive. (lines 38, 77)
+###       need to make it case sensitive.
 
 def main():
 
@@ -117,10 +117,10 @@ def main():
                 CustomerID = 0
             try:
                 # Assign contact_ID
-                cursor.execute(f"""
+                query = list(cursor.execute(f"""
                     select max(ContactID) from Contact_Details
-                """)
-                ContactID = int(cursor[0][0]) + 1
+                """))
+                ContactID = int(query[0][0]) + 1
                 cursor.execute(f"""
                     insert into Contact_Details values ({ContactID})
                 """)
