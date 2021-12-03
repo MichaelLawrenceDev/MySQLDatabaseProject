@@ -282,7 +282,7 @@ def Start(conn, username):
             # get customerID
             query_answer = cursor.execute(f"select CustomerID from Customer where Username = '{username}'")
             customerID = int(list(query_answer)[0][0])
-            orderTime = dt.datetime.now().strftime('%Y-%m-%d')
+            orderTime = dt.datetime.now().strftime('%m-%d-%Y')
             OrderID = 0
 
             # get OrderID
