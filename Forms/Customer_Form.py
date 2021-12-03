@@ -323,7 +323,16 @@ def Start(conn, username):
             OrderLabel.grid(row=1, column=1)
             DateLabel.grid(row=3, column=1)
             ValueLabel.grid(row=5, column=1)
-
+            
+            def queryToText(query):
+                text = ""
+                for i in range(len(query)):
+                    if i != len(query)-1:
+                        text += str(query[i][0]) + "\n "
+                    else:
+                        text += str(query[i][0])
+                return text
+            
             #List of selected books
             bList = list(cursor.execute(f"""
                 select Books.Title from Books, Orders, Order_Items where 
@@ -331,7 +340,7 @@ def Start(conn, username):
                 Books.ISBN = Order_Items.ISBN and
                 Orders.OrderID = {OrderID}
             """))
-            ListLabel = Label(orderForm, text=str(bList))
+            ListLabel = Label(orderForm, text=queryToText(bList))
             ListLabel.grid(row=4, column=1)
         
     viewButton = Button(cForm, text="View Account", command = viewDetails)
