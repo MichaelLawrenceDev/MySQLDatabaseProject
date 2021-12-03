@@ -122,6 +122,8 @@ def Start(admin_conn, username):
         TitleText = Entry(update3Form, width=25)
         Publication_DateLabel = Label(update3Form, text="Publication_Date:")
         Publication_DateText = Entry(update3Form, width=25)
+        PriceLabel = Label(update3Form, text="Price:")
+        PriceText = Entry(update3Form, width=25)
         User_ReviewsLabel = Label(update3Form, text="User_Reviews:")
         User_ReviewsText = Entry(update3Form, width=25)
         
@@ -131,8 +133,10 @@ def Start(admin_conn, username):
         TitleText.place(x=200, y=80)
         Publication_DateLabel.place(x=20, y=110)
         Publication_DateText.place(x=200, y=110)
-        User_ReviewsLabel.place(x=20, y=140)
-        User_ReviewsText.place(x=200, y=140)
+        PriceLabel.place(x=20, y=140)
+        PriceText.place(x=200, y=140)
+        User_ReviewsLabel.place(x=20, y=170)
+        User_ReviewsText.place(x=200, y=170)
         
             
         def update3Info():
@@ -187,6 +191,16 @@ def Start(admin_conn, username):
         SupplierIDText.place(x=200, y=50)
         Supplier_NameLabel.place(x=20, y=80)
         Supplier_NameText.place(x=200, y=80)
+          
+        def update4Info():
+            SupplierID = SupplierIDText.get()
+            Supplier_Name = Supplier_NameText.get()
+                
+            if(SupplierID=="" or Supplier_Name=="" ):
+                MessageBox.showinfo('Update Status', 'All fields are required')
+            else:
+                cursor.execute("update Supplier set Supplier_Name='" + Supplier_Name +"'where SupplierID='"+ SupplierID +"'")
+                cursor.execute('commit')
         
         def remove4Info():
             
@@ -202,7 +216,9 @@ def Start(admin_conn, username):
             SupplierIDText.Remove(0, 'end')
             Supplier_NameText.Remove(0, 'end')
             MessageBox.showinfo('Delete Status', 'Record deleted!')
-            
+        
+        update4 = Button(remove4Form, text="Update", command = update4Info)
+        update4.place(x=250, y=250)
         remove4 = Button(remove4Form, text="Remove", command = remove4Info)
         remove4.place(x=350, y=250)
 
