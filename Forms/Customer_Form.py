@@ -1,10 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
 import datetime as dt
-import Customer_Form
-import Admin_Form
 import pyodbc
-import bcrypt
 from tkinter.messagebox import showinfo
 import sys
 
@@ -230,7 +227,6 @@ def Start(conn, username):
     def viewBooks():
         booksForm = Toplevel(cForm)
         booksForm.title("Browse Books")
-        
 
         def search(): 
             key = SearchText.get()
@@ -262,18 +258,23 @@ def Start(conn, username):
 
         b.grid(column=1, row=1, sticky='NS')
 
-        
-        #Add book to order
-        def getBook():
-            a = b.curselection()[0]
-            label['text'] = b.get(a)
-            item = label.cget("text")
-        b.bind('<<ListboxSelect>>', lambda x: getBook())
         label = Label(booksForm)
-        OrderButton = Button(booksForm, text="Add to Order", command = lambda: submitOrder(["19740637", "28450378"]))
+        OrderButton = Button(booksForm, text="Order Selected Book", 
+            command = lambda: submitOrder(getTitles(b)))
         OrderButton.grid(row=5, column=1)
 
-        def submitOrder(listISBNs):
+        def getTitles(listbox):
+            titles = []
+            for i in listbox.curselection():
+                titles.append(listbox.get(i))
+            return titles
+
+        def submitOrder(selection):
+
+            if len(selection) == 0:
+                messagebox.showerror("Submit Order Error:", "No books selected.")
+                return
+
             orderForm = Toplevel(cForm)
             orderForm.title("Order Details")
             item = label.cget("text")
@@ -297,7 +298,8 @@ def Start(conn, username):
             # Insert into Order_Items Table...
             Order_Value = 0
             try:
-                for ISBN in listISBNs:
+                for book in selection:
+                    ISBN = list(cursor.execute(f"select ISBN from Books where Title = '{book}'"))[0][0]
                     itemNum = 0
                     try:
                         itemNum = int(list(cursor.execute("select max(Item_Number) from Order_Items;"))[0][0]) + 1
@@ -324,8 +326,8 @@ def Start(conn, username):
 
             #List of selected books
             bList = list(cursor.execute(f"""
-                select Books.Title from Books, Orders, Order_Items
-                where Orders.OrderID = Order_Items.OrderID and
+                select Books.Title from Books, Orders, Order_Items where 
+                Orders.OrderID = Order_Items.OrderID and
                 Books.ISBN = Order_Items.ISBN and
                 Orders.OrderID = {OrderID}
             """))
